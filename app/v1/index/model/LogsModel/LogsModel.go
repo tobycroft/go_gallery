@@ -15,7 +15,7 @@ func Api_insert(discript string, log string) bool {
 	db.Data(data)
 	_, err := db.Insert()
 	if err != nil {
-		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		Log.Dbrr(err, tuuz.FUNCTION_ALL())
 		return false
 	} else {
 		return true
