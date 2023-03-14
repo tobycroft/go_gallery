@@ -15,6 +15,7 @@ func AuthController(route *gin.RouterGroup) {
 
 	route.Any("register", auth_register)
 	route.Any("login", auth_login)
+	route.Any("register", auth_login)
 	route.Any("phone", auth_phone)
 	route.Any("send", auth_send)
 	route.Any("code", auth_code)
@@ -31,6 +32,12 @@ func auth_register(c *gin.Context) {
 	}
 	password, ok := Input.PostLength("password", 6, 24, c, false)
 	if !ok {
+		return
+	}
+	code, ok := Input.PostInt64("code", c)
+	err := ASMS.Sms_verify_in10(phone, code)
+	if err != nil {
+		RET.Fail(c, 401, err.Error(), "验证码错误")
 		return
 	}
 	if len(UserModel.Api_find_byPhone(phone)) > 0 {
