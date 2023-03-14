@@ -20,6 +20,21 @@ func OnRoute(router *gin.Engine) {
 		{
 			v1.IndexRouter(index)
 		}
-
+		system := version1.Group("system")
+		{
+			v1.SystemRouter(system)
+		}
+		tag := version1.Group("tag")
+		{
+			v1.TagRouter(tag)
+		}
+		user := version1.Group("user")
+		{
+			v1.UserRouter(user)
+		}
+		wechat := version1.Group("wechat")
+		{
+			v1.WechatRouter(wechat)
+		}
 	}
 }

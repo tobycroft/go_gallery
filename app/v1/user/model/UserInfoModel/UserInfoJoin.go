@@ -1,6 +1,7 @@
 package UserInfoModel
 
 import (
+	"github.com/tobycroft/gorose-pro"
 	"main.go/app/v1/user/model/UserModel"
 	"main.go/tuuz"
 	"main.go/tuuz/Log"
