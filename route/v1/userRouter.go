@@ -13,5 +13,4 @@ func UserRouter(route *gin.RouterGroup) {
 	controller.AuthController(route.Group("auth"))
 	controller.InfoController(route.Group("info"))
 	controller.WechatController(route.Group("wechat"))
-	controller.PrintController(route.Group("print"))
 }
