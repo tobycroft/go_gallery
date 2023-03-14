@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/tobycroft/gorose-pro"
 	"main.go/tuuz/Input"
 )
 
