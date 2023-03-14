@@ -2,6 +2,7 @@ package Input
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/tobycroft/gorose-pro"
 	"html/template"
 	"main.go/tuuz/RET"
 	"main.go/tuuz/Vali"

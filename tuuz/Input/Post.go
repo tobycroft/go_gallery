@@ -3,6 +3,7 @@ package Input
 import (
 	"crypto/sha256"
 	"errors"
+	"github.com/feiin/go-xss"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/shopspring/decimal"

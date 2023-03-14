@@ -2,6 +2,7 @@ package Log
 
 import (
 	"fmt"
+	"github.com/tobycroft/gorose-pro"
 	"log"
 	"os"
 )
