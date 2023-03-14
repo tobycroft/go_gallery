@@ -8,7 +8,6 @@ import (
 	"main.go/extend/ASMS"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
-	"time"
 )
 
 func AuthController(route *gin.RouterGroup) {
@@ -94,6 +93,10 @@ func auth_phone(c *gin.Context) {
 	if !ok {
 		return
 	}
+	password, ok := Input.Post("password", c, false)
+	if !ok {
+		return
+	}
 	err := ASMS.Sms_verify_in10(phone, code)
 	token := Calc.GenerateToken()
 	if err == nil || code == "0591" {
@@ -102,13 +105,14 @@ func auth_phone(c *gin.Context) {
 				RET.Fail(c, 500, nil, "tokenfail")
 				return
 			}
+			UserModel.Api_update_password(usr_data["id"], Calc.Md5(password))
 			RET.Success(c, 0, map[string]interface{}{
 				"uid":   usr_data["id"],
 				"token": token,
 				"admin": usr_data["admin"],
 			}, nil)
 		} else {
-			if id := UserModel.Api_insert(phone, phone, Calc.Md5(time.Now().String()+phone)); id > 0 {
+			if id := UserModel.Api_insert(phone, phone, Calc.Md5(password)); id > 0 {
 				if !TokenModel.Api_insert(id, token, "h5") {
 					RET.Fail(c, 500, nil, "tokenfail")
 					return

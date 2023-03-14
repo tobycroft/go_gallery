@@ -301,6 +301,25 @@ func Api_update_openid(uid, wx_id interface{}) bool {
 	}
 }
 
+func Api_update_password(uid, password interface{}) bool {
+	db := tuuz.Db().Table(Table)
+	where := map[string]interface{}{
+		"id": uid,
+	}
+	db.Where(where)
+	data := map[string]interface{}{
+		"password": password,
+	}
+	db.Data(data)
+	_, err := db.Update()
+	if err != nil {
+		Log.Dbrr(err, tuuz.FUNCTION_ALL())
+		return false
+	} else {
+		return true
+	}
+}
+
 func Api_select_wxId_byId(ids, notin_ids []interface{}) []gorose.Data {
 	db := tuuz.Db().Table(Table)
 	if len(ids) > 0 {
