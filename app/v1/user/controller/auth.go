@@ -33,12 +33,6 @@ func auth_register(c *gin.Context) {
 	if !ok {
 		return
 	}
-	code, ok := Input.PostInt64("code", c)
-	err := ASMS.Sms_verify_in10(phone, code)
-	if err != nil {
-		RET.Fail(c, 401, err.Error(), "验证码错误")
-		return
-	}
 	if len(UserModel.Api_find_byPhone(phone)) > 0 {
 		RET.Fail(c, 406, nil, "你已经注册了")
 	} else {
