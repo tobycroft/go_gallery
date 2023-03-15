@@ -9,7 +9,7 @@ import (
 	"main.go/tuuz/RET"
 )
 
-func EnrollController(route *gin.RouterGroup) {
+func InfoController(route *gin.RouterGroup) {
 
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 

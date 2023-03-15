@@ -10,6 +10,6 @@ func EnrollRouter(route *gin.RouterGroup) {
 		context.String(0, route.BasePath())
 	})
 
-	controller.EnrollController(route.Group("enroll"))
+	controller.InfoController(route.Group("info"))
 
 }
