@@ -12,11 +12,11 @@ type Interface struct {
 	Db gorose.IOrm
 }
 
-func Api_select(uid, is_used, is_verify, is_payed interface{}) []gorose.Data {
+func Api_select(uid, is_upload, is_verify, is_payed interface{}) []gorose.Data {
 	db := tuuz.Db().Table(Table)
 	db.Where("uid", uid)
-	if is_used != nil {
-		db.Where("is_used", is_used)
+	if is_upload != nil {
+		db.Where("is_upload", is_upload)
 	}
 	if is_verify != nil {
 		db.Where("is_verify", is_verify)
@@ -90,11 +90,11 @@ func (self *Interface) Api_update(id, uid, tag_id, age, tag_group_id, name, emai
 	}
 }
 
-func (self *Interface) Api_update_isUsed(order_id, is_used interface{}) bool {
+func (self *Interface) Api_update_isUpload(id, is_upload interface{}) bool {
 	db := self.Db.Table(Table)
-	db.Where("order_id", order_id)
+	db.Where("id", id)
 	data := map[string]any{
-		"is_used": is_used,
+		"is_upload": is_upload,
 	}
 	db.Data(data)
 	_, err := db.Update()

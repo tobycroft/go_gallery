@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/app/v1/enroll/model/EnrollUploadModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz"
@@ -53,11 +54,22 @@ func upload_add(c *gin.Context) {
 		RET.Fail(c, 406, nil, "你已经上传过作品了")
 		return
 	}
+	db := tuuz.Db()
 	var eu EnrollUploadModel.Interface
-	eu.Db = tuuz.Db()
+	eu.Db = db
+	db.Begin()
 	if eu.Api_insert(uid, enroll_id, title, content, attachment, teacher_name, teacher_phone, is_original) {
+		var e EnrollModel.Interface
+		e.Db = db
+		if !e.Api_update_isUpload(is, true) {
+			db.Rollback()
+			RET.Fail(c, 500, nil, "修改错误")
+			return
+		}
+		db.Commit()
 		RET.Success(c, 0, nil, nil)
 	} else {
+		db.Rollback()
 		RET.Fail(c, 500, nil, nil)
 	}
 }
