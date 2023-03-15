@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/app/v1/enroll/model/EnrollUploadModel"
+	"main.go/app/v1/enroll/model/EnrolllikeModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz"
 	"main.go/tuuz/Input"
@@ -126,5 +127,9 @@ func upload_list(c *gin.Context) {
 		return
 	}
 	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, limit, page)
+	for i, datum := range datas.Data {
+		datum["like"] = EnrolllikeModel.Api_count_byEnrollId(datum["enroll_id"])
+		datas.Data[i] = datum
+	}
 	RET.Success(c, 0, datas, nil)
 }
