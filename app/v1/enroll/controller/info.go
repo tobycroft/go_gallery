@@ -14,6 +14,7 @@ func InfoController(route *gin.RouterGroup) {
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 
 	route.Any("add", enroll_add)
+	route.Any("list", enroll_list)
 
 }
 
@@ -78,4 +79,10 @@ func enroll_add(c *gin.Context) {
 	} else {
 		RET.Fail(c, 500, nil, nil)
 	}
+}
+
+func enroll_list(c *gin.Context) {
+	uid := c.GetHeader("uid")
+	datas := EnrollModel.Api_select(uid, nil, nil, nil)
+	RET.Success(c, 0, datas, nil)
 }

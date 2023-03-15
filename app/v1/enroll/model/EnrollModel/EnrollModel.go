@@ -12,6 +12,27 @@ type Interface struct {
 	Db gorose.IOrm
 }
 
+func Api_select(uid, is_used, is_verify, is_payed interface{}) []gorose.Data {
+	db := tuuz.Db().Table(Table)
+	db.Where("uid", uid)
+	if is_used != nil {
+		db.Where("is_used", is_used)
+	}
+	if is_verify != nil {
+		db.Where("is_verify", is_verify)
+	}
+	if is_payed != nil {
+		db.Where("is_payed", is_payed)
+	}
+	ret, err := db.Get()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return nil
+	} else {
+		return ret
+	}
+}
+
 func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address interface{}) bool {
 	db := self.Db.Table(Table)
 	data := map[string]interface{}{
