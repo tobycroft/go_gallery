@@ -11,4 +11,5 @@ func TagRouter(route *gin.RouterGroup) {
 	})
 
 	controller.InfoController(route.Group("info"))
+	controller.GroupController(route.Group("group"))
 }
