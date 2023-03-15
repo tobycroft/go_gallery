@@ -3,9 +3,11 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/tobycroft/Calc"
+	"main.go/app/v1/enroll/model/EnrollUploadModel"
 	"main.go/app/v1/enroll/model/EnrolllikeModel"
 	"main.go/common/BaseController"
 	"main.go/common/BaseModel/SystemParamModel"
+	"main.go/tuuz"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
 )
@@ -35,9 +37,22 @@ func like_add(c *gin.Context) {
 		RET.Fail(c, 406, nil, "超过当日投票次数")
 		return
 	}
-	if EnrolllikeModel.Api_insert(uid, enroll_id) {
-		RET.Success(c, 0, nil, nil)
-	} else {
+	var el EnrolllikeModel.Interface
+	db := tuuz.Db()
+	el.Db = db
+	db.Begin()
+	if !el.Api_insert(uid, enroll_id) {
+		db.Rollback()
 		RET.Fail(c, 500, nil, nil)
+		return
 	}
+	var eu EnrollUploadModel.Interface
+	eu.Db = db
+	if !eu.Api_inc_like(enroll_id) {
+		db.Rollback()
+		RET.Fail(c, 500, nil, nil)
+		return
+	}
+	db.Commit()
+	RET.Success(c, 0, nil, nil)
 }

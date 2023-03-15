@@ -68,3 +68,15 @@ func (self *Interface) Api_update(uid, enroll_id, title, content, attachment, te
 		return true
 	}
 }
+
+func (self *Interface) Api_inc_like(enroll_id any) bool {
+	db := self.Db.Table(Table)
+	db.Where("enroll_id")
+	_, err := db.Increment("likes", 1)
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return false
+	} else {
+		return true
+	}
+}

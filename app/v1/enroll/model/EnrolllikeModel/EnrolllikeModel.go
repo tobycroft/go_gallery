@@ -1,11 +1,16 @@
 package EnrolllikeModel
 
 import (
+	"github.com/tobycroft/gorose-pro"
 	"main.go/tuuz"
 	"main.go/tuuz/Log"
 )
 
 const Table = "g_enroll_like"
+
+type Interface struct {
+	Db gorose.IOrm
+}
 
 func Api_count_byEnrollId(enroll_id any) int64 {
 	db := tuuz.Db().Table(Table)
@@ -45,8 +50,8 @@ func Api_count_today(uid any) int64 {
 	}
 }
 
-func Api_insert(uid, enroll_id any) bool {
-	db := tuuz.Db().Table(Table)
+func (self *Interface) Api_insert(uid, enroll_id any) bool {
+	db := self.Db.Table(Table)
 	data := map[string]any{
 		"uid":       uid,
 		"enroll_id": enroll_id,
