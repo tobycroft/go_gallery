@@ -121,5 +121,9 @@ func upload_list(c *gin.Context) {
 	if !ok {
 		return
 	}
-	EnrollUploadModel.Api_find()
+	limit, apge, err := Input.PostLimitPage(c)
+	if err != nil {
+		return
+	}
+	EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, limit, page)
 }
