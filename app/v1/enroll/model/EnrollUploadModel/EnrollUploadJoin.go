@@ -9,7 +9,7 @@ import (
 
 func Api_joinEnroll_paginator_byTagId(tag_id any, limit, page int) gorose.Paginate {
 	db := tuuz.Db().Table(Table + " a")
-	db.Fields("a.attachment", "a.title", "b.tag_id", "b.name")
+	db.Fields("a.enroll_id", "a.attachment", "a.title", "b.tag_id", "b.name")
 	db.LeftJoin(EnrollModel.Table+" b", "a.enroll_id=b.id")
 	db.Where("tag_id", tag_id)
 	db.Limit(limit)
