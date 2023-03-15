@@ -2,9 +2,11 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/tobycroft/AossGoSdk"
 	"github.com/tobycroft/Calc"
 	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseModel/TokenModel"
+	"main.go/config/app_conf"
 	"main.go/extend/ASMS"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
@@ -32,6 +34,7 @@ func auth_register(c *gin.Context) {
 	if !ok {
 		return
 	}
+
 	if len(UserModel.Api_find_byPhone(phone)) > 0 {
 		RET.Fail(c, 406, nil, "你已经注册了")
 	} else {
@@ -90,7 +93,16 @@ func auth_phone(c *gin.Context) {
 	if !ok {
 		return
 	}
-	err := ASMS.Sms_verify_in10(phone, code)
+	js_code, ok := Input.Post("js_code", c, false)
+	if !ok {
+		return
+	}
+	ret, err := AossGoSdk.Wechat_sns_jscode2session(app_conf.Project, js_code)
+	if err != nil {
+		RET.Fail(c, 200, ret, err.Error())
+		return
+	}
+	err = ASMS.Sms_verify_in10(phone, code)
 	token := Calc.GenerateToken()
 	if err == nil || code == "0591" {
 		if usr_data := UserModel.Api_find_byPhone(phone); len(usr_data) > 0 {
