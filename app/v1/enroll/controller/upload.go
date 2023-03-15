@@ -12,6 +12,8 @@ import (
 
 func UploadController(route *gin.RouterGroup) {
 
+	route.Any("list")
+
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 
 	route.Any("add", upload_add)
@@ -112,4 +114,12 @@ func upload_edit(c *gin.Context) {
 	} else {
 		RET.Fail(c, 500, nil, nil)
 	}
+}
+
+func upload_list(c *gin.Context) {
+	tag_id, ok := Input.PostInt64("tag_id", c)
+	if !ok {
+		return
+	}
+	EnrollUploadModel.Api_find()
 }
