@@ -6,7 +6,7 @@ import (
 	"main.go/tuuz/Log"
 )
 
-const Table = "lc_rounding"
+const Table = "g_rounding"
 
 func Api_select() []gorose.Data {
 	db := tuuz.Db().Table(Table)

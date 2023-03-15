@@ -6,7 +6,7 @@ import (
 	"main.go/tuuz/Log"
 )
 
-const Table = "lc_tag"
+const Table = "g_tag"
 
 func Api_select() []gorose.Data {
 	db := tuuz.Db().Table(Table)
