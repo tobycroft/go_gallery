@@ -9,7 +9,7 @@ import (
 	"main.go/tuuz/RET"
 )
 
-func UploadController(route gin.RouterGroup) {
+func UploadController(route *gin.RouterGroup) {
 
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 
