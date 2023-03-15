@@ -36,5 +36,9 @@ func OnRoute(router *gin.Engine) {
 		{
 			v1.WechatRouter(wechat)
 		}
+		enroll := version1.Group("enroll")
+		{
+			v1.EnrollRouter(enroll)
+		}
 	}
 }
