@@ -34,12 +34,11 @@ func (self *Interface) Api_insert(uid, enroll_id, title, content, attachment, te
 	}
 }
 
-func (self *Interface) Api_update(id, uid, enroll_id, title, content, attachment, teacher_name, teacher_phone, is_original any) bool {
+func (self *Interface) Api_update(uid, enroll_id, title, content, attachment, teacher_name, teacher_phone, is_original any) bool {
 	db := self.Db.Table(Table)
-	db.Where("id", id)
 	db.Where("uid", uid)
+	db.Where("enroll_id", enroll_id)
 	data := map[string]any{
-		"enroll_id":     enroll_id,
 		"title":         title,
 		"content":       content,
 		"attachment":    attachment,
