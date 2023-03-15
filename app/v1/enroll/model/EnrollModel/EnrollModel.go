@@ -61,6 +61,35 @@ func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, email, g
 	}
 }
 
+func (self *Interface) Api_update(id, uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address interface{}) bool {
+	db := self.Db.Table(Table)
+	db.Where("id", id)
+	db.Where("uid", uid)
+	data := map[string]interface{}{
+		"tag_id":       tag_id,
+		"age":          age,
+		"tag_group_id": tag_group_id,
+		"name":         name,
+		"email":        email,
+		"gender":       gender,
+		"cert":         cert,
+		"school_name":  school_name,
+		"phone":        phone,
+		"province":     province,
+		"city":         city,
+		"district":     district,
+		"address":      address,
+	}
+	db.Data(data)
+	_, err := db.Update()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return false
+	} else {
+		return true
+	}
+}
+
 func (self *Interface) Api_update_isUsed(order_id, is_used interface{}) bool {
 	db := self.Db.Table(Table)
 	db.Where("order_id", order_id)
