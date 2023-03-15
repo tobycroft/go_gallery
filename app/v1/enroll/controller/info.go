@@ -19,7 +19,7 @@ func InfoController(route *gin.RouterGroup) {
 
 func enroll_add(c *gin.Context) {
 	uid := c.GetHeader("uid")
-	tag_id, ok := Input.PostInt64("tag", c)
+	tag_id, ok := Input.PostInt64("tag_id", c)
 	if !ok {
 		return
 	}
