@@ -14,6 +14,7 @@ func Api_joinEnroll_paginator_byTagId(tag_id any, limit, page int) gorose.Pagina
 	db.Where("tag_id", tag_id)
 	db.Limit(limit)
 	db.Page(page)
+	db.OrderBy("a.id desc")
 	ret, err := db.Paginator()
 	if err != nil {
 		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())

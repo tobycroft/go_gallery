@@ -14,6 +14,7 @@ import (
 func UploadController(route *gin.RouterGroup) {
 
 	route.Any("list", upload_list)
+	route.Any("list_rank", upload_list_rank)
 
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 
@@ -118,6 +119,23 @@ func upload_edit(c *gin.Context) {
 }
 
 func upload_list(c *gin.Context) {
+	tag_id, ok := Input.PostInt64("tag_id", c)
+	if !ok {
+		return
+	}
+	limit, page, err := Input.PostLimitPage(c)
+	if err != nil {
+		return
+	}
+	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, limit, page)
+	for i, datum := range datas.Data {
+		datum["like"] = EnrolllikeModel.Api_count_byEnrollId(datum["enroll_id"])
+		datas.Data[i] = datum
+	}
+	RET.Success(c, 0, datas, nil)
+}
+
+func upload_list_rank(c *gin.Context) {
 	tag_id, ok := Input.PostInt64("tag_id", c)
 	if !ok {
 		return
