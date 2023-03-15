@@ -48,6 +48,11 @@ func upload_add(c *gin.Context) {
 		return
 	}
 
+	data := EnrollUploadModel.Api_find(uid, enroll_id)
+	if len(data) > 0 {
+		RET.Fail(c, 406, nil, "你已经上传过作品了")
+		return
+	}
 	var eu EnrollUploadModel.Interface
 	eu.Db = tuuz.Db()
 	if eu.Api_insert(uid, enroll_id, title, content, attachment, teacher_name, teacher_phone, is_original) {

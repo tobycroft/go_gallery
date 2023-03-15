@@ -12,6 +12,19 @@ type Interface struct {
 	Db gorose.IOrm
 }
 
+func Api_find(uid, enroll_id any) gorose.Data {
+	db := tuuz.Db().Table(Table)
+	db.Where("uid", uid)
+	db.Where("enroll_id", enroll_id)
+	ret, err := db.Find()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return nil
+	} else {
+		return ret
+	}
+}
+
 func (self *Interface) Api_insert(uid, enroll_id, title, content, attachment, teacher_name, teacher_phone, is_original any) bool {
 	db := self.Db.Table(Table)
 	data := map[string]any{
