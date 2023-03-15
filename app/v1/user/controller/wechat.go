@@ -20,6 +20,7 @@ func WechatController(route *gin.RouterGroup) {
 
 	route.Any("testjump", wechat_testjump)
 	route.Any("login", wechat_login)
+	route.Any("bind", wechat_bind)
 	route.Any("phone", wechat_phone)
 	route.Any("scene", wechat_scene)
 	route.Any("create", wechat_create)
