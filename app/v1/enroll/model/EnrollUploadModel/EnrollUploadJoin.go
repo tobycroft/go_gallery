@@ -23,3 +23,20 @@ func Api_joinEnroll_paginator_byTagId(tag_id any, limit, page int) gorose.Pagina
 		return ret
 	}
 }
+
+func Api_joinEnroll_paginator_byTagId_orderByLikes(tag_id any, limit, page int) gorose.Paginate {
+	db := tuuz.Db().Table(Table + " a")
+	db.Fields("a.enroll_id", "a.attachment", "a.title", "b.tag_id", "b.name")
+	db.LeftJoin(EnrollModel.Table+" b", "a.enroll_id=b.id")
+	db.Where("tag_id", tag_id)
+	db.Limit(limit)
+	db.Page(page)
+	db.OrderBy("a.likes desc")
+	ret, err := db.Paginator()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return gorose.Paginate{}
+	} else {
+		return ret
+	}
+}

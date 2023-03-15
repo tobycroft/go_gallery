@@ -144,7 +144,7 @@ func upload_list_rank(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, limit, page)
+	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId_orderByLikes(tag_id, limit, page)
 	for i, datum := range datas.Data {
 		datum["like"] = EnrolllikeModel.Api_count_byEnrollId(datum["enroll_id"])
 		datas.Data[i] = datum
