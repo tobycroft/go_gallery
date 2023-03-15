@@ -12,8 +12,8 @@ type Interface struct {
 	Db gorose.IOrm
 }
 
-func Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address interface{}) bool {
-	db := tuuz.Db().Table(Table)
+func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address interface{}) bool {
+	db := self.Db.Table(Table)
 	data := map[string]interface{}{
 		"uid":          uid,
 		"tag_id":       tag_id,
@@ -40,8 +40,8 @@ func Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, schoo
 	}
 }
 
-func Api_update_isUsed(order_id, is_used interface{}) bool {
-	db := tuuz.Db().Table(Table)
+func (self *Interface) Api_update_isUsed(order_id, is_used interface{}) bool {
+	db := self.Db.Table(Table)
 	db.Where("order_id", order_id)
 	data := map[string]any{
 		"is_used": is_used,
@@ -56,8 +56,8 @@ func Api_update_isUsed(order_id, is_used interface{}) bool {
 	}
 }
 
-func Api_update_isVerify(order_id, is_verify interface{}) bool {
-	db := tuuz.Db().Table(Table)
+func (self *Interface) Api_update_isVerify(order_id, is_verify interface{}) bool {
+	db := self.Db.Table(Table)
 	db.Where("order_id", order_id)
 	data := map[string]any{
 		"is_verify": is_verify,
@@ -72,8 +72,8 @@ func Api_update_isVerify(order_id, is_verify interface{}) bool {
 	}
 }
 
-func Api_update_isPayed(order_id, is_payed interface{}) bool {
-	db := tuuz.Db().Table(Table)
+func (self *Interface) Api_update_isPayed(order_id, is_payed interface{}) bool {
+	db := self.Db.Table(Table)
 	db.Where("order_id", order_id)
 	data := map[string]any{
 		"is_payed": is_payed,

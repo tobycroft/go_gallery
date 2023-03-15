@@ -2,8 +2,11 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/common/BaseController"
+	"main.go/tuuz"
 	"main.go/tuuz/Input"
+	"main.go/tuuz/RET"
 )
 
 func EnrollController(route *gin.RouterGroup) {
@@ -68,5 +71,11 @@ func enroll_add(c *gin.Context) {
 	if !ok {
 		return
 	}
-
+	var e EnrollModel.Interface
+	e.Db = tuuz.Db()
+	if e.Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address) {
+		RET.Success(c, 0, nil, nil)
+	} else {
+		RET.Fail(c, 500, nil, nil)
+	}
 }
