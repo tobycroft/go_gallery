@@ -12,7 +12,7 @@ import (
 
 func UploadController(route *gin.RouterGroup) {
 
-	route.Any("list")
+	route.Any("list", upload_list)
 
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 
@@ -121,9 +121,10 @@ func upload_list(c *gin.Context) {
 	if !ok {
 		return
 	}
-	limit, apge, err := Input.PostLimitPage(c)
+	limit, page, err := Input.PostLimitPage(c)
 	if err != nil {
 		return
 	}
-	EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, limit, page)
+	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, limit, page)
+	RET.Success(c, 0, datas, nil)
 }
