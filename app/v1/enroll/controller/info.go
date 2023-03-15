@@ -14,6 +14,7 @@ func InfoController(route *gin.RouterGroup) {
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 
 	route.Any("add", enroll_add)
+	route.Any("edit", enroll_edit)
 	route.Any("list", enroll_list)
 
 }
