@@ -8,7 +8,8 @@ import (
 )
 
 func GroupController(route *gin.RouterGroup) {
-
+	route.Any("list", group_list)
+	route.Any("get", group_get)
 }
 
 func group_list(c *gin.Context) {
