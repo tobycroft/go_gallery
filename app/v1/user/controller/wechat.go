@@ -84,6 +84,45 @@ func wechat_login(c *gin.Context) {
 	}
 }
 
+func wechat_bind(c *gin.Context) {
+	phone, ok := Input.PostLength("phone", 11, 11, c, false)
+	if !ok {
+		return
+	}
+	password, ok := Input.Post("password", c, false)
+	if !ok {
+		return
+	}
+	js_code, ok := Input.Post("js_code", c, false)
+	if !ok {
+		return
+	}
+	ret, err := AossGoSdk.Wechat_sns_jscode2session(app_conf.Project, js_code)
+	if err != nil {
+		RET.Fail(c, 200, ret, err.Error())
+		return
+	}
+	token := Calc.GenerateToken()
+	if user := UserModel.Api_find_byWxId(ret.Openid); len(user) > 0 {
+		TokenModel.Api_insert(user["id"], token, "wx")
+		RET.Success(c, 0, map[string]interface{}{
+			"token": token,
+			"uid":   user["id"],
+		}, nil)
+		return
+	}
+	if id := UserModel.Api_insert_more(phone, phone, Calc.Md5(password), ret.Openid, ret.Unionid, ""); id > 0 {
+		token = Calc.GenerateToken()
+		TokenModel.Api_insert(id, token, "wx")
+		RET.Success(c, 0, map[string]interface{}{
+			"token": token,
+			"uid":   id,
+		}, nil)
+	} else {
+		RET.Fail(c, 500, nil, nil)
+	}
+}
+
 func wechat_phone(c *gin.Context) {
 	uid := c.GetHeader("uid")
 	code, ok := Input.Post("code", c, false)
