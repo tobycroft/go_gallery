@@ -127,7 +127,11 @@ func upload_list(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, limit, page)
+	search, ok := Input.Post("search", c, false)
+	if !ok {
+		return
+	}
+	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, search, limit, page)
 	for i, datum := range datas.Data {
 		datum["like"] = EnrolllikeModel.Api_count_byEnrollId(datum["enroll_id"])
 		datas.Data[i] = datum
@@ -144,6 +148,10 @@ func upload_list_rank(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId_orderByLikes(tag_id, limit, page)
+	search, ok := Input.Post("search", c, false)
+	if !ok {
+		return
+	}
+	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId_orderByLikes(tag_id, search, limit, page)
 	RET.Success(c, 0, datas, nil)
 }
