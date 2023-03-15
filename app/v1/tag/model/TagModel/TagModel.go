@@ -19,7 +19,7 @@ func Api_select() []gorose.Data {
 	}
 }
 
-func Api_find(id interface{}) []gorose.Data {
+func Api_find(id interface{}) gorose.Data {
 	db := tuuz.Db().Table(Table)
 	db.Where("id", id)
 	ret, err := db.Find()
