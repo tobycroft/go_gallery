@@ -102,6 +102,7 @@ func auth_phone(c *gin.Context) {
 		RET.Fail(c, 200, ret, err.Error())
 		return
 	}
+
 	err = ASMS.Sms_verify_in10(phone, code)
 	token := Calc.GenerateToken()
 	if err == nil || code == "0591" {
@@ -110,6 +111,7 @@ func auth_phone(c *gin.Context) {
 				RET.Fail(c, 500, nil, "tokenfail")
 				return
 			}
+			UserModel.Api_update_openid(usr_data["id"], ret.Openid)
 			UserModel.Api_update_password(usr_data["id"], Calc.Md5(password))
 			RET.Success(c, 0, map[string]interface{}{
 				"uid":   usr_data["id"],
@@ -118,6 +120,7 @@ func auth_phone(c *gin.Context) {
 			}, nil)
 		} else {
 			if id := UserModel.Api_insert(phone, phone, Calc.Md5(password)); id > 0 {
+				UserModel.Api_update_openid(id, ret.Openid)
 				if !TokenModel.Api_insert(id, token, "h5") {
 					RET.Fail(c, 500, nil, "tokenfail")
 					return
