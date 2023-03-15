@@ -14,6 +14,7 @@ import (
 func UploadController(route *gin.RouterGroup) {
 
 	route.Any("list", upload_list)
+	route.Any("get", upload_get)
 	route.Any("list_rank", upload_list_rank)
 
 	route.Use(BaseController.LoginedController(), gin.Recovery())
@@ -137,6 +138,19 @@ func upload_list(c *gin.Context) {
 		datas.Data[i] = datum
 	}
 	RET.Success(c, 0, datas, nil)
+}
+
+func upload_get(c *gin.Context) {
+	enroll_id, ok := Input.PostInt64("enroll_id", c)
+	if !ok {
+		return
+	}
+	data := EnrollUploadModel.Api_joinEnroll_find_byEnrollId(enroll_id)
+	if len(data) > 0 {
+		RET.Success(c, 0, data, nil)
+	} else {
+		RET.Fail(c, 404, nil, nil)
+	}
 }
 
 func upload_list_rank(c *gin.Context) {
