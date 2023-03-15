@@ -14,6 +14,7 @@ func UploadController(route *gin.RouterGroup) {
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 
 	route.Any("add", upload_add)
+	route.Any("edit", upload_edit)
 }
 
 func upload_add(c *gin.Context) {
