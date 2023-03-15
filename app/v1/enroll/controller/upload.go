@@ -61,7 +61,7 @@ func upload_add(c *gin.Context) {
 	if eu.Api_insert(uid, enroll_id, title, content, attachment, teacher_name, teacher_phone, is_original) {
 		var e EnrollModel.Interface
 		e.Db = db
-		if !e.Api_update_isUpload(is, true) {
+		if !e.Api_update_isUpload(enroll_id, true) {
 			db.Rollback()
 			RET.Fail(c, 500, nil, "修改错误")
 			return
