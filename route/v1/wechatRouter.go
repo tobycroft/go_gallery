@@ -12,4 +12,7 @@ func WechatRouter(route *gin.RouterGroup) {
 
 	controller.MessageController(route.Group("message"))
 
+	controller.PayController(route.Group("pay"))
+	controller.ApiController(route.Group("api"))
+
 }
