@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/tobycroft/Calc"
+	"main.go/common/BaseController"
 	"main.go/config/app_conf"
 	"main.go/route"
 	"os"
@@ -28,6 +29,7 @@ func main() {
 	//gin.DefaultWriter = ioutil.Discard
 	mainroute.SetTrustedProxies([]string{"0.0.0.0/0"})
 	mainroute.SecureJsonPrefix(app_conf.SecureJsonPrefix)
+	mainroute.Use(BaseController.CommonController())
 	route.OnRoute(mainroute)
 	mainroute.Run(":80")
 

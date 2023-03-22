@@ -17,6 +17,8 @@ require (
 	github.com/tobycroft/Calc v1.2.2
 	github.com/tobycroft/HttpRequest v1.1.5
 	github.com/tobycroft/gorose-pro v1.10.2
+	github.com/wechatpay-apiv3/wechatpay-go v0.2.16
+	golang.org/x/net v0.8.0
 
 )
 
@@ -44,11 +46,9 @@ require (
 	github.com/tobycroft/TuuzNet v1.0.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
-	github.com/wechatpay-apiv3/wechatpay-go v0.2.16 // indirect
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/image v0.6.0 // indirect
-	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 	google.golang.org/protobuf v1.29.1 // indirect
