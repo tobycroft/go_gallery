@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+	"github.com/Unknwon/goconfig"
 	"github.com/gin-gonic/gin"
 	"github.com/wechatpay-apiv3/wechatpay-go/core"
 	"github.com/wechatpay-apiv3/wechatpay-go/core/option"
@@ -14,12 +16,36 @@ func PayController(route *gin.RouterGroup) {
 
 }
 
+var mchID string
+var mchCertificateSerialNumber string
+var mchAPIv3Key string
+
+func init() {
+	_ready()
+}
+
+func _ready() {
+	cfg, err := goconfig.LoadConfigFile("conf.ini")
+	if err != nil {
+		goconfig.SaveConfigFile(&goconfig.ConfigFile{}, "conf.ini")
+		_ready()
+	} else {
+		value, err := cfg.GetSection("wechatpay")
+		if err != nil {
+			cfg.SetValue("wechatpay", "mchID", "")
+			cfg.SetValue("wechatpay", "mchCertificateSerialNumber", "")
+			cfg.SetValue("wechatpay", "mchAPIv3Key", "")
+			goconfig.SaveConfigFile(cfg, "conf.ini")
+			fmt.Println("wechatpay_ready")
+			_ready()
+		}
+		mchID = value["mchID"]
+		mchCertificateSerialNumber = value["mchCertificateSerialNumber"]
+		mchAPIv3Key = value["mchAPIv3Key"]
+	}
+}
+
 func pay_index(c *gin.Context) {
-	var (
-		mchID                      string = "190000****"                               // 商户号
-		mchCertificateSerialNumber string = "3775B6A45ACD588826D15E583A95F5DD********" // 商户证书序列号
-		mchAPIv3Key                string = "2ab9****************************"         // 商户APIv3密钥
-	)
 
 	// 使用 utils 提供的函数从本地文件中加载商户私钥，商户私钥会用来生成请求的签名
 	mchPrivateKey, err := utils.LoadPrivateKeyWithPath("./apiclient_key.pem")
