@@ -2,11 +2,9 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tobycroft/AossGoSdk"
 	"github.com/tobycroft/Calc"
 	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseModel/TokenModel"
-	"main.go/config/app_conf"
 	"main.go/extend/ASMS"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
@@ -93,17 +91,12 @@ func auth_phone(c *gin.Context) {
 	if !ok {
 		return
 	}
-	js_code, ok := Input.Post("js_code", c, false)
+	openid, ok := Input.Post("openid", c, false)
 	if !ok {
 		return
 	}
-	ret, err := AossGoSdk.Wechat_sns_jscode2session(app_conf.Project, js_code)
-	if err != nil {
-		RET.Fail(c, 200, ret, err.Error())
-		return
-	}
 
-	err = ASMS.Sms_verify_in10(phone, code)
+	err := ASMS.Sms_verify_in10(phone, code)
 	token := Calc.GenerateToken()
 	if err == nil || code == "0591" {
 		if usr_data := UserModel.Api_find_byPhone(phone); len(usr_data) > 0 {
@@ -111,7 +104,7 @@ func auth_phone(c *gin.Context) {
 				RET.Fail(c, 500, nil, "tokenfail")
 				return
 			}
-			UserModel.Api_update_openid(usr_data["id"], ret.Openid)
+			UserModel.Api_update_openid(usr_data["id"], openid)
 			UserModel.Api_update_password(usr_data["id"], Calc.Md5(password))
 			RET.Success(c, 0, map[string]interface{}{
 				"uid":   usr_data["id"],
@@ -120,7 +113,7 @@ func auth_phone(c *gin.Context) {
 			}, nil)
 		} else {
 			if id := UserModel.Api_insert(phone, phone, Calc.Md5(password)); id > 0 {
-				UserModel.Api_update_openid(id, ret.Openid)
+				UserModel.Api_update_openid(id, openid)
 				if !TokenModel.Api_insert(id, token, "h5") {
 					RET.Fail(c, 500, nil, "tokenfail")
 					return
