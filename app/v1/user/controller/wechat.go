@@ -226,7 +226,7 @@ func wechat_redirect(c *gin.Context) {
 func wechat_testjump(c *gin.Context) {
 	redirect, ok := Input.Get("url", c, false)
 	if !ok {
-		c.Redirect(303, "https://lc.familyeducation.org.cn/#/login?code=0&echo=成功&data=test")
+		c.Redirect(303, "https://gallery.familyeducation.org.cn/#/login?code=0&echo=成功&data=test")
 	} else {
 		RET.Success(c, 0, redirect+"?code=0&echo=成功&data=test", nil)
 		//c.Redirect(303, redirect+"?code=0&echo=成功&data=test")
