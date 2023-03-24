@@ -241,7 +241,7 @@ func wechat_authurl(c *gin.Context) {
 	if !ok {
 		return
 	}
-	redirect_uri := "https://api.lc.familyeducation.org.cn/v1/user/wechat/redirect?redirect=" + redirect
+	redirect_uri := "https://api.gallery.familyeducation.org.cn/v1/user/wechat/redirect?redirect=" + redirect
 	url, err := AossGoSdk.Wechat_offi_openidUrl(app_conf.Project, redirect_uri, "code", "snsapi_userinfo", Calc.Any2String(user["phone"]), false)
 	if err != nil {
 		RET.Fail(c, 200, nil, err)
