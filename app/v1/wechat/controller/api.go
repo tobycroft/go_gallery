@@ -14,6 +14,7 @@ import (
 
 func ApiController(route *gin.RouterGroup) {
 
+	route.Any("noti", noti)
 }
 
 func noti(c *gin.Context) {
