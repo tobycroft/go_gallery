@@ -272,7 +272,7 @@ func wechat_signature(c *gin.Context) {
 func wechat_signaturet(c *gin.Context) {
 	nonceStr := "Wm3WZYTPz0wzccnW"
 	timestamp := time.Now()
-	url := "https://lc.familyeducation.org.cn"
+	url := "https://gallery.familyeducation.org.cn"
 	signature, err := AossGoSdk.Wechat_ticket_signature(app_conf.Project, nonceStr, timestamp, url)
 	if err != nil {
 		RET.Fail(c, 200, nil, err.Error())
