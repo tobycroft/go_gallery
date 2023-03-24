@@ -166,6 +166,8 @@ github.com/tobycroft/AossGoSdk v1.14.2 h1:u/fPcOkqknhYAwRAf83fFT2CSzKL5swE3K/7hn
 github.com/tobycroft/AossGoSdk v1.14.2/go.mod h1:9Lh6CrkrsNPwZSmuTUisGinZ+0O5I299foZBTbmSsOI=
 github.com/tobycroft/AossGoSdk v1.14.3 h1:oaYu9HrArDAWXeoJWe981OXTXCYqUk1qKGneQ2GRo1w=
 github.com/tobycroft/AossGoSdk v1.14.3/go.mod h1:9Lh6CrkrsNPwZSmuTUisGinZ+0O5I299foZBTbmSsOI=
+github.com/tobycroft/AossGoSdk v1.14.4 h1:W2cQ2ILzRTyn2qGZIOMh9zgye5C6nLr3+WfykKiD1zE=
+github.com/tobycroft/AossGoSdk v1.14.4/go.mod h1:9Lh6CrkrsNPwZSmuTUisGinZ+0O5I299foZBTbmSsOI=
 github.com/tobycroft/Calc v1.2.2 h1:+cONTOZ/9CaQ6IIz+cizrdkilKDX1E8Nfb/Ns2QduoA=
 github.com/tobycroft/Calc v1.2.2/go.mod h1:Rtbth5rVSBICUCh2tH0tQwB1x2SHzhtkyB1FndlETEA=
 github.com/tobycroft/HttpRequest v1.1.5 h1:NUAjTVSoanjVNny1GVaYKaxfJJd26fIY4dj3RoRMxao=
