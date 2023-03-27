@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Unknwon/goconfig"
 	"github.com/gin-gonic/gin"
+	"github.com/tobycroft/Calc"
 	"github.com/wechatpay-apiv3/wechatpay-go/core"
 	"github.com/wechatpay-apiv3/wechatpay-go/core/option"
 	"github.com/wechatpay-apiv3/wechatpay-go/services/certificates"
@@ -13,6 +14,7 @@ import (
 	"golang.org/x/net/context"
 	"log"
 	"main.go/common/BaseController"
+	"main.go/tuuz/RET"
 )
 
 func PayController(route *gin.RouterGroup) {
@@ -93,17 +95,17 @@ func pay_index(c *gin.Context) {
 var client *core.Client
 
 func pay_order(c *gin.Context) {
-
+	orderid := Calc.GenerateOrderId()
 	svc := jsapi.JsapiApiService{Client: client}
 	// 得到prepay_id，以及调起支付所需的参数和签名
-	resp, result, err := svc.PrepayWithRequestPayment(ctx,
+	resp, _, err := svc.PrepayWithRequestPayment(ctx,
 		jsapi.PrepayRequest{
 			Appid:       core.String(appid),
 			Mchid:       core.String(mchID),
 			Description: core.String("Image形象店-深圳腾大-QQ公仔"),
-			OutTradeNo:  core.String("1217752501201407033233368018"),
-			Attach:      core.String("自定义数据说明"),
-			NotifyUrl:   core.String("https://api.gallery.familyeducation.org.cn/v1/wechat/api/notify"),
+			OutTradeNo:  core.String(orderid),
+			//Attach:      core.String("自定义数据说明"),
+			NotifyUrl: core.String("https://api.gallery.familyeducation.org.cn/v1/wechat/api/notify"),
 			Amount: &jsapi.Amount{
 				Total: core.Int64(100),
 			},
@@ -112,10 +114,9 @@ func pay_order(c *gin.Context) {
 			},
 		},
 	)
-	fmt.Println("resulkt", result)
 	if err == nil {
-		log.Println(resp)
+		RET.Success(c, 0, resp, nil)
 	} else {
-		log.Println(err)
+		RET.Fail(c, 500, err, err.Error())
 	}
 }
