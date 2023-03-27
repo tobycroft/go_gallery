@@ -103,7 +103,7 @@ func pay_order(c *gin.Context) {
 			Description: core.String("Image形象店-深圳腾大-QQ公仔"),
 			OutTradeNo:  core.String("1217752501201407033233368018"),
 			Attach:      core.String("自定义数据说明"),
-			NotifyUrl:   core.String("https://www.weixin.qq.com/wxpay/pay.php"),
+			NotifyUrl:   core.String("https://api.gallery.familyeducation.org.cn/v1/wechat/api/notify"),
 			Amount: &jsapi.Amount{
 				Total: core.Int64(100),
 			},
