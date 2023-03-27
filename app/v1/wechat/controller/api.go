@@ -14,10 +14,11 @@ import (
 
 func ApiController(route *gin.RouterGroup) {
 
-	route.Any("noti", noti)
+	route.Any("notify"+
+		"", api_notify)
 }
 
-func noti(c *gin.Context) {
+func api_notify(c *gin.Context) {
 	err := downloader.MgrInstance().RegisterDownloaderWithPrivateKey(ctx, mchPrivateKey, mchCertificateSerialNumber, mchID, mchAPIv3Key)
 	if err != nil {
 		Log.Crrs(err, tuuz.FUNCTION_ALL())
