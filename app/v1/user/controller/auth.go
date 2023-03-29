@@ -17,7 +17,7 @@ func AuthController(route *gin.RouterGroup) {
 	route.Any("register", auth_register)
 	route.Any("login", auth_login)
 	route.Any("phone", auth_phone)
-	route.Any("phone2", auth_phone2)
+	route.Any("phone2", auth_phone)
 	route.Any("send", auth_send)
 	route.Any("code", auth_code)
 }
