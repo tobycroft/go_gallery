@@ -94,16 +94,17 @@ func wechat_bind(c *gin.Context) {
 	if !ok {
 		return
 	}
-	openid, ok := Input.Post("openid", c, false)
+	js_code, ok := Input.Post("js_code", c, false)
 	if !ok {
 		return
 	}
-	unionid, ok := Input.Post("unionid", c, false)
-	if !ok {
+	ret, err := AossGoSdk.Wechat_sns_jscode2session(app_conf.Project, js_code)
+	if err != nil {
+		RET.Fail(c, 200, ret, err.Error())
 		return
 	}
 	token := Calc.GenerateToken()
-	if user := UserModel.Api_find_byWxId(openid); len(user) > 0 {
+	if user := UserModel.Api_find_byWxId(ret.Openid); len(user) > 0 {
 		TokenModel.Api_insert(user["id"], token, "wx")
 		RET.Success(c, 0, map[string]interface{}{
 			"token": token,
@@ -111,7 +112,7 @@ func wechat_bind(c *gin.Context) {
 		}, nil)
 		return
 	}
-	if id := UserModel.Api_insert_more(phone, phone, Calc.Md5(password), openid, unionid, ""); id > 0 {
+	if id := UserModel.Api_insert_more(phone, phone, Calc.Md5(password), ret.Openid, ret.Unionid, ""); id > 0 {
 		token = Calc.GenerateToken()
 		TokenModel.Api_insert(id, token, "wx")
 		RET.Success(c, 0, map[string]interface{}{
