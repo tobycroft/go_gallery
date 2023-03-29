@@ -103,7 +103,6 @@ func auth_phone2(c *gin.Context) {
 		RET.Fail(c, 200, ret, err.Error())
 		return
 	}
-
 	err = ASMS.Sms_verify_in10(phone, code)
 	token := Calc.GenerateToken()
 	if err == nil || code == "0591" {

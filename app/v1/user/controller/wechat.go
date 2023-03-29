@@ -68,8 +68,9 @@ func wechat_login(c *gin.Context) {
 	if user := UserModel.Api_find_byWxId(ret.Openid); len(user) > 0 {
 		TokenModel.Api_insert(user["id"], token, "wx")
 		RET.Success(c, 0, map[string]interface{}{
-			"token": token,
-			"uid":   user["id"],
+			"token":      token,
+			"uid":        user["id"],
+			"need_phone": "wx_"+ret.Openid == user["phone"].(string),
 		}, nil)
 		return
 	}
@@ -77,8 +78,9 @@ func wechat_login(c *gin.Context) {
 		token = Calc.GenerateToken()
 		TokenModel.Api_insert(id, token, "wx")
 		RET.Success(c, 0, map[string]interface{}{
-			"token": token,
-			"uid":   id,
+			"token":      token,
+			"uid":        id,
+			"need_phone": true,
 		}, nil)
 	} else {
 		RET.Fail(c, 500, nil, nil)
@@ -105,22 +107,29 @@ func wechat_bind(c *gin.Context) {
 	}
 	token := Calc.GenerateToken()
 	if user := UserModel.Api_find_byWxId(ret.Openid); len(user) > 0 {
+		UserModel.Api_update_phone(user["id"], phone)
 		TokenModel.Api_insert(user["id"], token, "wx")
 		RET.Success(c, 0, map[string]interface{}{
-			"token": token,
-			"uid":   user["id"],
+			"token":      token,
+			"uid":        user["id"],
+			"need_phone": "wx_"+ret.Openid == user["phone"].(string),
 		}, nil)
 		return
 	}
-	if id := UserModel.Api_insert_more(phone, phone, Calc.Md5(password), ret.Openid, ret.Unionid, ""); id > 0 {
-		token = Calc.GenerateToken()
-		TokenModel.Api_insert(id, token, "wx")
+	data := UserModel.Api_find_byPhoneandPassword(phone, Calc.Md5(password))
+	if len(data) > 0 {
+		UserModel.Api_update_openid(data["id"], ret.Openid)
+		if !TokenModel.Api_insert(data["id"], token, "h5") {
+			RET.Fail(c, 500, nil, "tokenfail")
+			return
+		}
 		RET.Success(c, 0, map[string]interface{}{
-			"token": token,
-			"uid":   id,
+			"uid":        data["id"],
+			"token":      token,
+			"need_phone": false,
 		}, nil)
 	} else {
-		RET.Fail(c, 500, nil, nil)
+		RET.Fail(c, 401, nil, nil)
 	}
 }
 
