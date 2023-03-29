@@ -16,7 +16,7 @@ func AuthController(route *gin.RouterGroup) {
 
 	route.Any("register", auth_register)
 	route.Any("login", auth_login)
-	route.Any("phone", auth_phone2)
+	route.Any("phone", auth_phone)
 	route.Any("phone2", auth_phone2)
 	route.Any("send", auth_send)
 	route.Any("code", auth_code)
@@ -81,6 +81,56 @@ func auth_login(c *gin.Context) {
 	}
 }
 
+func auth_phone(c *gin.Context) {
+	phone, ok := Input.PostLength("phone", 11, 11, c, false)
+	if !ok {
+		return
+	}
+	code, ok := Input.PostLength("code", 4, 4, c, false)
+	if !ok {
+		return
+	}
+	password, ok := Input.Post("password", c, false)
+	if !ok {
+		return
+	}
+	js_code, ok := Input.Post("js_code", c, false)
+	if !ok {
+		return
+	}
+	ret, err := AossGoSdk.Wechat_sns_jscode2session(app_conf.Project, js_code)
+	if err != nil {
+		RET.Fail(c, 200, ret, err.Error())
+		return
+	}
+	err = ASMS.Sms_verify_in10(phone, code)
+	token := Calc.GenerateToken()
+	if user := UserModel.Api_find_byWxId(ret.Openid); len(user) > 0 {
+		UserModel.Api_update_phone(user["id"], phone)
+		TokenModel.Api_insert(user["id"], token, "wx")
+		RET.Success(c, 0, map[string]interface{}{
+			"token":      token,
+			"uid":        user["id"],
+			"need_phone": "wx_"+ret.Openid == user["phone"].(string),
+		}, nil)
+		return
+	} else {
+		if id := UserModel.Api_insert(phone, phone, Calc.Md5(password)); id > 0 {
+			UserModel.Api_update_openid(id, ret.Openid)
+			if !TokenModel.Api_insert(id, token, "h5") {
+				RET.Fail(c, 500, nil, "tokenfail")
+				return
+			}
+			RET.Success(c, 0, map[string]interface{}{
+				"uid":        id,
+				"token":      token,
+				"need_phone": true,
+			}, nil)
+		} else {
+			RET.Fail(c, 404, nil, nil)
+		}
+	}
+}
 func auth_phone2(c *gin.Context) {
 	phone, ok := Input.PostLength("phone", 11, 11, c, false)
 	if !ok {
@@ -121,60 +171,6 @@ func auth_phone2(c *gin.Context) {
 		} else {
 			if id := UserModel.Api_insert(phone, phone, Calc.Md5(password)); id > 0 {
 				UserModel.Api_update_openid(id, ret.Openid)
-				if !TokenModel.Api_insert(id, token, "h5") {
-					RET.Fail(c, 500, nil, "tokenfail")
-					return
-				}
-				RET.Success(c, 0, map[string]interface{}{
-					"uid":   id,
-					"token": token,
-					"admin": usr_data["admin"],
-				}, nil)
-			} else {
-				RET.Fail(c, 404, nil, nil)
-			}
-		}
-	} else {
-		RET.Fail(c, 401, err.Error(), "验证码错误")
-	}
-}
-
-func auth_phone(c *gin.Context) {
-	phone, ok := Input.PostLength("phone", 11, 11, c, false)
-	if !ok {
-		return
-	}
-	code, ok := Input.PostLength("code", 4, 4, c, false)
-	if !ok {
-		return
-	}
-	password, ok := Input.Post("password", c, false)
-	if !ok {
-		return
-	}
-	openid, ok := Input.Post("openid", c, false)
-	if !ok {
-		return
-	}
-
-	err := ASMS.Sms_verify_in10(phone, code)
-	token := Calc.GenerateToken()
-	if err == nil || code == "0591" {
-		if usr_data := UserModel.Api_find_byPhone(phone); len(usr_data) > 0 {
-			if !TokenModel.Api_insert(usr_data["id"], token, "h5") {
-				RET.Fail(c, 500, nil, "tokenfail")
-				return
-			}
-			UserModel.Api_update_openid(usr_data["id"], openid)
-			UserModel.Api_update_password(usr_data["id"], Calc.Md5(password))
-			RET.Success(c, 0, map[string]interface{}{
-				"uid":   usr_data["id"],
-				"token": token,
-				"admin": usr_data["admin"],
-			}, nil)
-		} else {
-			if id := UserModel.Api_insert(phone, phone, Calc.Md5(password)); id > 0 {
-				UserModel.Api_update_openid(id, openid)
 				if !TokenModel.Api_insert(id, token, "h5") {
 					RET.Fail(c, 500, nil, "tokenfail")
 					return
