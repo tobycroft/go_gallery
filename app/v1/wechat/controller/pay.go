@@ -101,8 +101,15 @@ func pay_order(c *gin.Context) {
 	if !ok {
 		return
 	}
+	if len(EnrollModel.Api_find(enroll_id)) < 1 {
+		RET.Fail(c, 404, nil, nil)
+		return
+	}
 	orderid := Calc.GenerateOrderId()
-	EnrollModel.Api_update_orderId(enroll_id, orderid)
+	if !EnrollModel.Api_update_orderId(enroll_id, orderid) {
+		RET.Fail(c, 500, nil, nil)
+		return
+	}
 	svc := jsapi.JsapiApiService{Client: client}
 	// 得到prepay_id，以及调起支付所需的参数和签名
 	resp, _, err := svc.PrepayWithRequestPayment(ctx,

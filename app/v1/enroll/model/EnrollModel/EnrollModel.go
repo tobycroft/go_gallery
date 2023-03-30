@@ -141,12 +141,27 @@ func (self *Interface) Api_update_isPayed(order_id, is_payed interface{}) bool {
 func Api_update_orderId(id, order_id interface{}) bool {
 	db := tuuz.Db().Table(Table)
 	db.Where("id", id)
-	db.Where("order_id", order_id)
+	data := map[string]interface{}{
+		"order": order_id,
+	}
+	db.Data(data)
 	_, err := db.Update()
 	if err != nil {
 		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
 		return false
 	} else {
 		return true
+	}
+}
+
+func Api_find(id interface{}) gorose.Data {
+	db := tuuz.Db().Table(Table)
+	db.Where("id", id)
+	ret, err := db.Find()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return nil
+	} else {
+		return ret
 	}
 }
