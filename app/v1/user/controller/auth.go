@@ -5,6 +5,7 @@ import (
 	"github.com/tobycroft/AossGoSdk"
 	"github.com/tobycroft/Calc"
 	"main.go/app/v1/user/model/UserModel"
+	"main.go/common/BaseController"
 	"main.go/common/BaseModel/TokenModel"
 	"main.go/config/app_conf"
 	"main.go/extend/ASMS"
@@ -16,10 +17,12 @@ func AuthController(route *gin.RouterGroup) {
 
 	route.Any("register", auth_register)
 	route.Any("login", auth_login)
-	route.Any("phone", auth_phone)
-	route.Any("phone2", auth_phone)
 	route.Any("send", auth_send)
 	route.Any("code", auth_code)
+
+	route.Use(BaseController.LoginedController(), gin.Recovery())
+	route.Any("phone", auth_phone)
+
 }
 
 func auth_register(c *gin.Context) {
@@ -82,6 +85,7 @@ func auth_login(c *gin.Context) {
 }
 
 func auth_phone(c *gin.Context) {
+	uid := c.GetHeader("uid")
 	phone, ok := Input.PostLength("phone", 11, 11, c, false)
 	if !ok {
 		return
@@ -94,41 +98,24 @@ func auth_phone(c *gin.Context) {
 	if !ok {
 		return
 	}
-	js_code, ok := Input.Post("js_code", c, false)
-	if !ok {
-		return
-	}
-	ret, err := AossGoSdk.Wechat_sns_jscode2session(app_conf.Project, js_code)
+	err := ASMS.Sms_verify_in10(phone, code)
 	if err != nil {
-		RET.Fail(c, 200, ret, err.Error())
+		RET.Fail(c, 403, nil, nil)
 		return
 	}
-	err = ASMS.Sms_verify_in10(phone, code)
 	token := Calc.GenerateToken()
-	if user := UserModel.Api_find_byWxId(ret.Openid); len(user) > 0 {
+	if user := UserModel.Api_find(uid); len(user) > 0 {
 		UserModel.Api_update_phone(user["id"], phone)
+		UserModel.Api_update_password(user["id"], Calc.Md5(password))
 		TokenModel.Api_insert(user["id"], token, "wx")
 		RET.Success(c, 0, map[string]interface{}{
 			"token":      token,
 			"uid":        user["id"],
-			"need_phone": "wx_"+ret.Openid == user["phone"].(string),
+			"need_phone": false,
 		}, nil)
 		return
 	} else {
-		if id := UserModel.Api_insert(phone, phone, Calc.Md5(password)); id > 0 {
-			UserModel.Api_update_openid(id, ret.Openid)
-			if !TokenModel.Api_insert(id, token, "h5") {
-				RET.Fail(c, 500, nil, "tokenfail")
-				return
-			}
-			RET.Success(c, 0, map[string]interface{}{
-				"uid":        id,
-				"token":      token,
-				"need_phone": true,
-			}, nil)
-		} else {
-			RET.Fail(c, 404, nil, nil)
-		}
+		RET.Fail(c, 404, nil, nil)
 	}
 }
 func auth_phone2(c *gin.Context) {
