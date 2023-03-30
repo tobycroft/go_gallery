@@ -14,6 +14,7 @@ import (
 	"golang.org/x/net/context"
 	"log"
 	"main.go/app/v1/enroll/model/EnrollModel"
+	"main.go/app/v1/tag/model/TagModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
@@ -101,13 +102,24 @@ func pay_order(c *gin.Context) {
 	if !ok {
 		return
 	}
-	if len(EnrollModel.Api_find(enroll_id)) < 1 {
+	enroll_data := EnrollModel.Api_find(enroll_id)
+	if len(enroll_data) < 1 {
 		RET.Fail(c, 404, nil, "没有找到对应提交的赛事")
 		return
 	}
 	orderid := Calc.GenerateOrderId()
 	if !EnrollModel.Api_update_orderId(enroll_id, orderid) {
 		RET.Fail(c, 500, nil, nil)
+		return
+	}
+	tag_data := TagModel.Api_find(enroll_data["tag_id"])
+	if len(tag_data) < 1 {
+		RET.Fail(c, 404, nil, "未找到对应的标签")
+		return
+	}
+	price, err := Calc.Any2Int64_2(tag_data["price"])
+	if err != nil {
+		RET.Fail(c, 408, nil, "价格数据错误")
 		return
 	}
 	svc := jsapi.JsapiApiService{Client: client}
@@ -121,7 +133,7 @@ func pay_order(c *gin.Context) {
 			//Attach:      core.String("自定义数据说明"),
 			NotifyUrl: core.String("https://api.gallery.familyeducation.org.cn/v1/wechat/api/notify"),
 			Amount: &jsapi.Amount{
-				Total: core.Int64(100),
+				Total: core.Int64(price * 100),
 			},
 			Payer: &jsapi.Payer{
 				Openid: core.String("otskLwSZNxCVX9FtJF1JkhyXXTWw"),
