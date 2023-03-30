@@ -102,7 +102,7 @@ func pay_order(c *gin.Context) {
 		return
 	}
 	if len(EnrollModel.Api_find(enroll_id)) < 1 {
-		RET.Fail(c, 404, nil, nil)
+		RET.Fail(c, 404, nil, "没有找到对应提交的赛事")
 		return
 	}
 	orderid := Calc.GenerateOrderId()
