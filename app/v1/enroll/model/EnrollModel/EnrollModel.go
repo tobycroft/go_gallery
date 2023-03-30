@@ -142,7 +142,7 @@ func Api_update_orderId(id, order_id interface{}) bool {
 	db := tuuz.Db().Table(Table)
 	db.Where("id", id)
 	data := map[string]interface{}{
-		"order": order_id,
+		"order_id": order_id,
 	}
 	db.Data(data)
 	_, err := db.Update()
