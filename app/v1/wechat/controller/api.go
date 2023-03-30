@@ -8,14 +8,14 @@ import (
 	"github.com/wechatpay-apiv3/wechatpay-go/core/downloader"
 	"github.com/wechatpay-apiv3/wechatpay-go/core/notify"
 	"github.com/wechatpay-apiv3/wechatpay-go/services/payments"
+	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/tuuz"
 	"main.go/tuuz/Log"
 )
 
 func ApiController(route *gin.RouterGroup) {
 
-	route.Any("notify"+
-		"", api_notify)
+	route.Any("notify", api_notify)
 }
 
 func api_notify(c *gin.Context) {
@@ -40,5 +40,28 @@ func api_notify(c *gin.Context) {
 	}
 	// 处理通知内容
 	fmt.Println(notifyReq.Summary)
-	fmt.Println(transaction.TransactionId)
+	order_id := transaction.OutTradeNo
+	//fmt.Println(transaction.TransactionId)
+	if *transaction.TradeState == "SUCCESS" {
+		data := EnrollModel.Api_find_byOrderId(order_id)
+		if len(data) > 0 {
+			var enroll EnrollModel.Interface
+			enroll.Db = tuuz.Db()
+			enroll.Api_update_isPayed(order_id, 1)
+		}
+	} else if *transaction.TradeState == "NOTPAY" {
+
+	} else if *transaction.TradeState == "CLOSED" {
+
+	} else if *transaction.TradeState == "REVOKED" {
+
+	} else if *transaction.TradeState == "USERPAYING" {
+
+	} else if *transaction.TradeState == "PAYERROR" {
+
+	}
+	c.JSON(200, map[string]any{
+		"code":    "SUCCESS",
+		"message": "成功",
+	})
 }
