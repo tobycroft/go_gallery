@@ -110,7 +110,7 @@ func pay_order(c *gin.Context) {
 				Total: core.Int64(100),
 			},
 			Payer: &jsapi.Payer{
-				Openid: core.String("oRrdQt76e1d17oYlUF3Bf-PaQlBU"),
+				Openid: core.String("otskLwSZNxCVX9FtJF1JkhyXXTWw"),
 			},
 		},
 	)
