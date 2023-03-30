@@ -102,7 +102,7 @@ func pay_order(c *gin.Context) {
 		jsapi.PrepayRequest{
 			Appid:       core.String(appid),
 			Mchid:       core.String(mchID),
-			Description: core.String("Image形象店-深圳腾大-QQ公仔"),
+			Description: core.String("参加活动的邮费"),
 			OutTradeNo:  core.String(orderid),
 			//Attach:      core.String("自定义数据说明"),
 			NotifyUrl: core.String("https://api.gallery.familyeducation.org.cn/v1/wechat/api/notify"),
