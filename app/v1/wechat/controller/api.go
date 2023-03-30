@@ -42,19 +42,27 @@ func api_notify(c *gin.Context) {
 	fmt.Println(notifyReq.Summary)
 	order_id := transaction.OutTradeNo
 	//fmt.Println(transaction.TransactionId)
+	data := EnrollModel.Api_find_byOrderId(order_id)
+	if len(data) < 1 {
+		c.JSON(200, map[string]any{
+			"code":    "FAIL",
+			"message": "未找到订单号",
+		})
+		return
+	}
 	if *transaction.TradeState == "SUCCESS" {
-		data := EnrollModel.Api_find_byOrderId(order_id)
-		if len(data) > 0 {
-			var enroll EnrollModel.Interface
-			enroll.Db = tuuz.Db()
-			enroll.Api_update_isPayed(order_id, 1)
-		}
+		var enroll EnrollModel.Interface
+		enroll.Db = tuuz.Db()
+		enroll.Api_update_isPayed(order_id, 1)
 	} else if *transaction.TradeState == "NOTPAY" {
-
+		EnrollModel.Api_update_orderId(data["id"], "")
 	} else if *transaction.TradeState == "CLOSED" {
-
+		var enroll EnrollModel.Interface
+		enroll.Db = tuuz.Db()
+		enroll.Api_update_isPayed(order_id, -1)
+		EnrollModel.Api_update_orderId(data["id"], "")
 	} else if *transaction.TradeState == "REVOKED" {
-
+		EnrollModel.Api_update_orderId(data["id"], "")
 	} else if *transaction.TradeState == "USERPAYING" {
 
 	} else if *transaction.TradeState == "PAYERROR" {
