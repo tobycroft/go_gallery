@@ -137,3 +137,16 @@ func (self *Interface) Api_update_isPayed(order_id, is_payed interface{}) bool {
 		return true
 	}
 }
+
+func Api_update_orderId(id, order_id interface{}) bool {
+	db := tuuz.Db().Table(Table)
+	db.Where("id", id)
+	db.Where("order_id", order_id)
+	_, err := db.Update()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return false
+	} else {
+		return true
+	}
+}

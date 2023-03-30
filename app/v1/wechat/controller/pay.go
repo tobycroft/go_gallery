@@ -13,7 +13,9 @@ import (
 	"github.com/wechatpay-apiv3/wechatpay-go/utils"
 	"golang.org/x/net/context"
 	"log"
+	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/common/BaseController"
+	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
 )
 
@@ -95,7 +97,12 @@ func pay_index(c *gin.Context) {
 var client *core.Client
 
 func pay_order(c *gin.Context) {
+	enroll_id, ok := Input.PostInt64("enroll_id", c)
+	if !ok {
+		return
+	}
 	orderid := Calc.GenerateOrderId()
+	EnrollModel.Api_update_orderId(enroll_id, orderid)
 	svc := jsapi.JsapiApiService{Client: client}
 	// 得到prepay_id，以及调起支付所需的参数和签名
 	resp, _, err := svc.PrepayWithRequestPayment(ctx,
