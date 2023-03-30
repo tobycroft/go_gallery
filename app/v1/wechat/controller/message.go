@@ -82,9 +82,7 @@ func wechat_reveive(c *gin.Context) {
 				return
 			}
 			break
-
 		}
-
 	}
 }
 
