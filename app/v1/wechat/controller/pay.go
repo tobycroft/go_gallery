@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Unknwon/goconfig"
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 	"github.com/tobycroft/Calc"
 	"github.com/wechatpay-apiv3/wechatpay-go/core"
 	"github.com/wechatpay-apiv3/wechatpay-go/core/option"
@@ -121,11 +122,11 @@ func pay_order(c *gin.Context) {
 		RET.Fail(c, 404, nil, "未找到对应的标签")
 		return
 	}
-	price, err := Calc.Any2Int64_2(tag_data["price"])
-	if err != nil {
-		RET.Fail(c, 408, nil, "价格数据错误")
-		return
-	}
+	price := Calc.ToDecimal(tag_data["price"])
+	//if err != nil {
+	//	RET.Fail(c, 408, nil, "价格数据错误")
+	//	return
+	//}
 	svc := jsapi.JsapiApiService{Client: client}
 	// 得到prepay_id，以及调起支付所需的参数和签名
 	resp, _, err := svc.PrepayWithRequestPayment(ctx,
@@ -137,7 +138,7 @@ func pay_order(c *gin.Context) {
 			//Attach:      core.String("自定义数据说明"),
 			NotifyUrl: core.String("https://api.gallery.familyeducation.org.cn/v1/wechat/api/notify"),
 			Amount: &jsapi.Amount{
-				Total: core.Int64(price * 100),
+				Total: core.Int64(price.Mul(decimal.NewFromInt(100)).IntPart()),
 			},
 			Payer: &jsapi.Payer{
 				Openid: core.String("otskLwSZNxCVX9FtJF1JkhyXXTWw"),
