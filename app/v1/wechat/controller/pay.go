@@ -16,6 +16,7 @@ import (
 	"log"
 	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/app/v1/tag/model/TagModel"
+	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
@@ -99,6 +100,12 @@ func pay_index(c *gin.Context) {
 var client *core.Client
 
 func pay_order(c *gin.Context) {
+	uid := c.GetHeader("uid")
+	user := UserModel.Api_find(uid)
+	if len(user) < 1 {
+		RET.Fail(c, 403, nil, "用户不存在")
+		return
+	}
 	enroll_id, ok := Input.PostInt64("enroll_id", c)
 	if !ok {
 		return
@@ -122,6 +129,8 @@ func pay_order(c *gin.Context) {
 		RET.Fail(c, 404, nil, "未找到对应的标签")
 		return
 	}
+
+	openid :=
 	price := Calc.ToDecimal(tag_data["price"])
 	//if err != nil {
 	//	RET.Fail(c, 408, nil, "价格数据错误")
@@ -141,7 +150,7 @@ func pay_order(c *gin.Context) {
 				Total: core.Int64(price.Mul(decimal.NewFromInt(100)).IntPart()),
 			},
 			Payer: &jsapi.Payer{
-				Openid: core.String("otskLwSZNxCVX9FtJF1JkhyXXTWw"),
+				Openid: core.String(Calc.Any2String(user["wx_id"])),
 			},
 		},
 	)
