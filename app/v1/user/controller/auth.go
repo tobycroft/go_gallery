@@ -90,17 +90,8 @@ func auth_phone(c *gin.Context) {
 	if !ok {
 		return
 	}
-	code, ok := Input.PostLength("code", 4, 4, c, false)
-	if !ok {
-		return
-	}
 	password, ok := Input.Post("password", c, false)
 	if !ok {
-		return
-	}
-	err := ASMS.Sms_verify_in10(phone, code)
-	if err != nil {
-		RET.Fail(c, 403, nil, nil)
 		return
 	}
 	token := Calc.GenerateToken()
