@@ -107,6 +107,10 @@ func pay_order(c *gin.Context) {
 		RET.Fail(c, 404, nil, "没有找到对应提交的赛事")
 		return
 	}
+	if enroll_data["is_payed"].(int64) == 1 {
+		RET.Fail(c, 402, nil, "已支付，无需再次支付")
+		return
+	}
 	orderid := Calc.GenerateOrderId()
 	if !EnrollModel.Api_update_orderId(enroll_id, orderid) {
 		RET.Fail(c, 500, nil, nil)
