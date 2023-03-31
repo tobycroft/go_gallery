@@ -133,7 +133,7 @@ func pay_order(c *gin.Context) {
 		jsapi.PrepayRequest{
 			Appid:       core.String(appid),
 			Mchid:       core.String(mchID),
-			Description: core.String("活动报名邮费"),
+			Description: core.String(Calc.Any2String(tag_data["price_title"])),
 			OutTradeNo:  core.String(orderid),
 			//Attach:      core.String("自定义数据说明"),
 			NotifyUrl: core.String("https://api.gallery.familyeducation.org.cn/v1/wechat/api/notify"),
