@@ -130,7 +130,6 @@ func pay_order(c *gin.Context) {
 		return
 	}
 
-	openid :=
 	price := Calc.ToDecimal(tag_data["price"])
 	//if err != nil {
 	//	RET.Fail(c, 408, nil, "价格数据错误")
