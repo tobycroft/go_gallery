@@ -53,6 +53,10 @@ func enroll_add(c *gin.Context) {
 	if !ok {
 		return
 	}
+	school_name_show, ok := Input.Post("school_name_show", c, true)
+	if !ok {
+		return
+	}
 	phone, ok := Input.Post("phone", c, true)
 	if !ok {
 		return
@@ -75,7 +79,7 @@ func enroll_add(c *gin.Context) {
 	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
-	if e.Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address) {
+	if e.Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
 		RET.Success(c, 0, nil, nil)
 	} else {
 		RET.Fail(c, 500, nil, nil)
@@ -120,6 +124,10 @@ func enroll_edit(c *gin.Context) {
 	if !ok {
 		return
 	}
+	school_name_show, ok := Input.Post("school_name_show", c, true)
+	if !ok {
+		return
+	}
 	phone, ok := Input.Post("phone", c, true)
 	if !ok {
 		return
@@ -142,7 +150,7 @@ func enroll_edit(c *gin.Context) {
 	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
-	if e.Api_update(id, uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address) {
+	if e.Api_update(id, uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
 		RET.Success(c, 0, nil, nil)
 	} else {
 		RET.Fail(c, 500, nil, nil)

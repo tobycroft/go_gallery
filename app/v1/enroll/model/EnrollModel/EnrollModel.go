@@ -33,23 +33,24 @@ func Api_select(uid, is_upload, is_verify, is_payed interface{}) []gorose.Data {
 	}
 }
 
-func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address interface{}) bool {
+func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) bool {
 	db := self.Db.Table(Table)
 	data := map[string]interface{}{
-		"uid":          uid,
-		"tag_id":       tag_id,
-		"age":          age,
-		"tag_group_id": tag_group_id,
-		"name":         name,
-		"email":        email,
-		"gender":       gender,
-		"cert":         cert,
-		"school_name":  school_name,
-		"phone":        phone,
-		"province":     province,
-		"city":         city,
-		"district":     district,
-		"address":      address,
+		"uid":              uid,
+		"tag_id":           tag_id,
+		"age":              age,
+		"tag_group_id":     tag_group_id,
+		"name":             name,
+		"email":            email,
+		"gender":           gender,
+		"cert":             cert,
+		"school_name":      school_name,
+		"school_name_show": school_name_show,
+		"phone":            phone,
+		"province":         province,
+		"city":             city,
+		"district":         district,
+		"address":          address,
 	}
 	db.Data(data)
 	_, err := db.Insert()
@@ -61,24 +62,25 @@ func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, email, g
 	}
 }
 
-func (self *Interface) Api_update(id, uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, phone, province, city, district, address interface{}) bool {
+func (self *Interface) Api_update(id, uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) bool {
 	db := self.Db.Table(Table)
 	db.Where("id", id)
 	db.Where("uid", uid)
 	data := map[string]interface{}{
-		"tag_id":       tag_id,
-		"age":          age,
-		"tag_group_id": tag_group_id,
-		"name":         name,
-		"email":        email,
-		"gender":       gender,
-		"cert":         cert,
-		"school_name":  school_name,
-		"phone":        phone,
-		"province":     province,
-		"city":         city,
-		"district":     district,
-		"address":      address,
+		"tag_id":           tag_id,
+		"age":              age,
+		"tag_group_id":     tag_group_id,
+		"name":             name,
+		"email":            email,
+		"gender":           gender,
+		"cert":             cert,
+		"school_name":      school_name,
+		"school_name_show": school_name_show,
+		"phone":            phone,
+		"province":         province,
+		"city":             city,
+		"district":         district,
+		"address":          address,
 	}
 	db.Data(data)
 	_, err := db.Update()
