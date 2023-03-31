@@ -67,14 +67,14 @@ func (self *Interface) Api_update(id, uid, tag_id, age, tag_group_id, name, emai
 	db.Where("id", id)
 	db.Where("uid", uid)
 	data := map[string]interface{}{
-		"tag_id":           tag_id,
-		"age":              age,
-		"tag_group_id":     tag_group_id,
-		"name":             name,
-		"email":            email,
-		"gender":           gender,
-		"cert":             cert,
-		"school_name":      school_name,
+		"tag_id":       tag_id,
+		"age":          age,
+		"tag_group_id": tag_group_id,
+		"name":         name,
+		"email":        email,
+		"gender":       gender,
+		"cert":         cert,
+		//"school_name":      school_name,
 		"school_name_show": school_name_show,
 		"phone":            phone,
 		"province":         province,
