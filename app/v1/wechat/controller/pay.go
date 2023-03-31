@@ -108,7 +108,7 @@ func pay_order(c *gin.Context) {
 		return
 	}
 	if enroll_data["is_payed"].(int64) == 1 {
-		RET.Fail(c, 402, nil, "已支付，无需再次支付")
+		RET.Fail(c, 406, nil, "已支付，无需再次支付")
 		return
 	}
 	orderid := Calc.GenerateOrderId()
