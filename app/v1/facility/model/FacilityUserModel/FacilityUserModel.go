@@ -19,3 +19,20 @@ func Api_find_byUid(uid interface{}) gorose.Data {
 		return ret
 	}
 }
+
+func Api_update_uid(uid, phone interface{}) bool {
+	db := tuuz.Db().Table(Table)
+	db.Where("phone", phone)
+	db.Where("uid", 0)
+	data := map[string]any{
+		"uid": uid,
+	}
+	db.Data(data)
+	_, err := db.Update()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return false
+	} else {
+		return true
+	}
+}
