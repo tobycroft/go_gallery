@@ -11,5 +11,6 @@ func FacilityRouter(route *gin.RouterGroup) {
 	})
 
 	controller.UserController(route.Group("user"))
+	controller.InfoController(route.Group("info"))
 
 }
