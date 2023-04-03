@@ -13,7 +13,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/json-iterator/go v1.1.12
 	github.com/shopspring/decimal v1.3.1
-	github.com/tobycroft/AossGoSdk v1.14.4
+	github.com/tobycroft/AossGoSdk v1.14.5
 	github.com/tobycroft/Calc v1.2.2
 	github.com/tobycroft/HttpRequest v1.1.5
 	github.com/tobycroft/gorose-pro v1.10.2
