@@ -94,20 +94,21 @@ func enroll_edit(c *gin.Context) {
 	if !ok {
 		return
 	}
-	mp.PostInt64("tag_id").
-		PostInt64("age").
-		PostInt64("tag_group_id").
-		PostString("name").
-		PostString("email").
-		PostInt64("gender").
-		PostString("nacertme").
-		PostString("school_name").
-		PostString("school_name_show").
-		PostString("phone").
-		PostString("province").
-		PostString("city").
-		PostString("district").
-		PostString("address")
+	mp.PostInt64("tag_id")
+	mp.PostInt64("age")
+	mp.PostInt64("tag_group_id")
+	mp.PostString("name")
+	mp.PostString("email")
+	mp.PostInt64("gender")
+	mp.PostString("nacertme")
+	mp.PostString("school_name")
+	mp.PostString("school_name_show")
+	mp.PostString("phone")
+	mp.PostString("province")
+	mp.PostString("city")
+	mp.PostString("district")
+	mp.PostString("address")
+	mp.PostDateTime("expect_date")
 	data, err, errmsg := mp.GetPostMap()
 	if err != nil {
 		RET.Fail(c, 400, nil, errmsg)
