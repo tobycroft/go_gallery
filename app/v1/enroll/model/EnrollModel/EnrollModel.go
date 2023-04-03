@@ -193,3 +193,19 @@ func Api_count_bySchoolName(school_name, is_payed any) int64 {
 		return ret
 	}
 }
+
+func Api_paginator_bySchoolName(school_name interface{}, limit, page int) gorose.Paginate {
+	db := tuuz.Db().Table(Table)
+	db.Fields("name,tag_id,is_upload,is_payed,date,change_date")
+	db.Where("school_name", school_name)
+	db.OrderBy("id desc")
+	db.Limit(limit)
+	db.Page(page)
+	ret, err := db.Paginator()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return gorose.Paginate{}
+	} else {
+		return ret
+	}
+}

@@ -14,9 +14,13 @@ func FacilityController(route *gin.RouterGroup) {
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 	route.Use(func(c *gin.Context) {
 		uid := c.GetHeader("uid")
-		fuser := FacilityUserModel.Api_find_byUid(uid)
+		facility_name, ok := Input.Post("facility_name", c, false)
+		if !ok {
+			return
+		}
+		fuser := FacilityUserModel.Api_find_byUidAndFacilityName(uid, facility_name)
 		if len(fuser) < 1 {
-			RET.Fail(c, 403, nil, "你不是机构管理员")
+			RET.Fail(c, 403, nil, "你不是该机构的管理员")
 			return
 		}
 	})
@@ -41,5 +45,14 @@ func facility_data(c *gin.Context) {
 }
 
 func facility_list(c *gin.Context) {
-
+	facility_name, ok := Input.Post("facility_name", c, false)
+	if !ok {
+		return
+	}
+	limit, page, err := Input.PostLimitPage(c)
+	if err != nil {
+		return
+	}
+	data := EnrollModel.Api_paginator_bySchoolName(facility_name, limit, page)
+	RET.Success(c, 0, data, nil)
 }
