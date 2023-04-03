@@ -7,6 +7,7 @@ import (
 	"main.go/tuuz"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
+	"time"
 )
 
 func InfoController(route *gin.RouterGroup) {
@@ -115,7 +116,9 @@ func enroll_edit(c *gin.Context) {
 		return
 	}
 	if mp.Has("expect_date") {
-
+		if mp.Find("expect_date").(time.Time).Before(time.Now().AddDate(0, 0, 3)) {
+			RET.Fail(c, 406, nil, "")
+		}
 	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
