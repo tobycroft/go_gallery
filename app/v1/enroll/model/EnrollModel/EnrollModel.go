@@ -92,6 +92,20 @@ func (self *Interface) Api_update(id, uid, tag_id, age, tag_group_id, name, emai
 	}
 }
 
+func (self *Interface) Api_update_auto(id, uid, data interface{}) bool {
+	db := self.Db.Table(Table)
+	db.Where("id", id)
+	db.Where("uid", uid)
+	db.Data(data)
+	_, err := db.Update()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return false
+	} else {
+		return true
+	}
+}
+
 func (self *Interface) Api_update_isUpload(id, is_upload interface{}) bool {
 	db := self.Db.Table(Table)
 	db.Where("id", id)
