@@ -114,7 +114,9 @@ func enroll_edit(c *gin.Context) {
 		RET.Fail(c, 400, nil, errmsg)
 		return
 	}
-	mp.FieldsCanBlank()
+	if mp.Has("expect_date") {
+
+	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
 	if e.Api_update_auto(id, uid, data) {

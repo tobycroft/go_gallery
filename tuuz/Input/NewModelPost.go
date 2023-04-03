@@ -121,6 +121,15 @@ func (post *ModelPost) Has(field string) bool {
 	return ok
 }
 
+func (post *ModelPost) Find(field string) any {
+	data, ok := post.data[field]
+	if ok {
+		return data
+	} else {
+		return nil
+	}
+}
+
 func (post *ModelPost) Copy(from_field string, to_field string) *ModelPost {
 	post.data[to_field] = post.data[from_field]
 	return post
