@@ -179,3 +179,17 @@ func Api_find_byOrderId(order_id interface{}) gorose.Data {
 		return ret
 	}
 }
+func Api_count_bySchoolName(school_name, is_payed any) int64 {
+	db := tuuz.Db().Table(Table)
+	db.Where("school_name", school_name)
+	if is_payed != nil {
+		db.Where("is_payed", is_payed)
+	}
+	ret, err := db.Counts()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return 0
+	} else {
+		return ret
+	}
+}

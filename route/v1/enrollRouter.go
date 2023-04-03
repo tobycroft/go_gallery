@@ -13,4 +13,6 @@ func EnrollRouter(route *gin.RouterGroup) {
 	controller.InfoController(route.Group("info"))
 	controller.UploadController(route.Group("upload"))
 	controller.LikeController(route.Group("like"))
+
+	controller.FacilityController(route.Group("facility"))
 }
