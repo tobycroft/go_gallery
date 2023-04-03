@@ -95,7 +95,7 @@ func enroll_edit(c *gin.Context) {
 	if !ok {
 		return
 	}
-	mp.PostInt64("tag_id")
+	//mp.PostInt64("tag_id")
 	mp.PostInt64("age")
 	mp.PostInt64("tag_group_id")
 	mp.PostString("name")
@@ -118,6 +118,7 @@ func enroll_edit(c *gin.Context) {
 	if mp.Has("expect_date") {
 		if mp.Find("expect_date").(time.Time).Before(time.Now().AddDate(0, 0, 3)) {
 			RET.Fail(c, 406, nil, "时间需要预约三天以后")
+			return
 		}
 	}
 	var e EnrollModel.Interface
