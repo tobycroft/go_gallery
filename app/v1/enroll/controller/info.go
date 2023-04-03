@@ -90,7 +90,7 @@ func enroll_add(c *gin.Context) {
 
 func enroll_edit(c *gin.Context) {
 	uid := c.GetHeader("uid")
-	mp := Input.ModelPost{}
+	mp := Input.NewModelPost(c)
 	id, ok := Input.PostInt64("id", c)
 	if !ok {
 		return
