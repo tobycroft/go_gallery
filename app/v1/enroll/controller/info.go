@@ -16,6 +16,7 @@ func InfoController(route *gin.RouterGroup) {
 	route.Any("add", enroll_add)
 	route.Any("edit", enroll_edit)
 	route.Any("list", enroll_list)
+	route.Any("get", enroll_get)
 
 }
 
@@ -126,4 +127,18 @@ func enroll_list(c *gin.Context) {
 	uid := c.GetHeader("uid")
 	datas := EnrollModel.Api_select(uid, nil, nil, nil)
 	RET.Success(c, 0, datas, nil)
+}
+
+func enroll_get(c *gin.Context) {
+	uid := c.GetHeader("uid")
+	id, ok := Input.PostInt64("id", c)
+	if !ok {
+		return
+	}
+	data := EnrollModel.Api_find_byUid(uid, id)
+	if len(data) > 0 {
+		RET.Success(c, 0, data, nil)
+	} else {
+		RET.Fail(c, 404, nil, nil)
+	}
 }
