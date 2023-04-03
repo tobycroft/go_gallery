@@ -40,5 +40,9 @@ func OnRoute(router *gin.Engine) {
 		{
 			v1.EnrollRouter(enroll)
 		}
+		facility := version1.Group("facility")
+		{
+			v1.FacilityRouter(facility)
+		}
 	}
 }
