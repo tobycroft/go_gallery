@@ -2,15 +2,15 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tobycroft/AossGoSdk"
 	"github.com/tobycroft/Calc"
 	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseController"
+	"main.go/common/BaseModel/SystemParamModel"
 	"main.go/common/BaseModel/TokenModel"
-	"main.go/config/app_conf"
 	"main.go/extend/ASMS"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
+	"time"
 )
 
 func AuthController(route *gin.RouterGroup) {
@@ -18,7 +18,7 @@ func AuthController(route *gin.RouterGroup) {
 	route.Any("register", auth_register)
 	route.Any("login", auth_login)
 	route.Any("send", auth_send)
-	route.Any("code", auth_code)
+	route.Any("code", auth_phone2)
 
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 	route.Any("phone", auth_phone)
@@ -109,46 +109,33 @@ func auth_phone(c *gin.Context) {
 		RET.Fail(c, 404, nil, nil)
 	}
 }
+
 func auth_phone2(c *gin.Context) {
 	phone, ok := Input.PostLength("phone", 11, 11, c, false)
 	if !ok {
 		return
 	}
-	code, ok := Input.PostLength("code", 4, 4, c, false)
+	code, ok := Input.PostLength("code", 4, 8, c, false)
 	if !ok {
 		return
 	}
-	password, ok := Input.Post("password", c, false)
-	if !ok {
-		return
-	}
-	js_code, ok := Input.Post("js_code", c, false)
-	if !ok {
-		return
-	}
-	ret, err := AossGoSdk.Wechat_sns_jscode2session(app_conf.Project, js_code)
-	if err != nil {
-		RET.Fail(c, 200, ret, err.Error())
-		return
-	}
-	err = ASMS.Sms_verify_in10(phone, code)
+	err := ASMS.Sms_verify_in10(phone, code)
 	token := Calc.GenerateToken()
-	if err == nil || code == "0591" {
+	supercode := SystemParamModel.Api_find_val("supercode")
+	usr := UserModel.Api_find_byPhoneandPassword(phone, code)
+	if err == nil || code == Calc.Any2String(supercode) || len(usr) > 0 {
 		if usr_data := UserModel.Api_find_byPhone(phone); len(usr_data) > 0 {
 			if !TokenModel.Api_insert(usr_data["id"], token, "h5") {
 				RET.Fail(c, 500, nil, "tokenfail")
 				return
 			}
-			UserModel.Api_update_openid(usr_data["id"], ret.Openid)
-			UserModel.Api_update_password(usr_data["id"], Calc.Md5(password))
 			RET.Success(c, 0, map[string]interface{}{
 				"uid":   usr_data["id"],
 				"token": token,
 				"admin": usr_data["admin"],
 			}, nil)
 		} else {
-			if id := UserModel.Api_insert(phone, phone, Calc.Md5(password)); id > 0 {
-				UserModel.Api_update_openid(id, ret.Openid)
+			if id := UserModel.Api_insert("", phone, Calc.Md5(time.Now().String()+phone)); id > 0 {
 				if !TokenModel.Api_insert(id, token, "h5") {
 					RET.Fail(c, 500, nil, "tokenfail")
 					return
@@ -156,7 +143,7 @@ func auth_phone2(c *gin.Context) {
 				RET.Success(c, 0, map[string]interface{}{
 					"uid":   id,
 					"token": token,
-					"admin": usr_data["admin"],
+					"admin": 0,
 				}, nil)
 			} else {
 				RET.Fail(c, 404, nil, nil)
