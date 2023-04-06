@@ -223,7 +223,7 @@ func Api_count_bySchoolName(school_name, is_payed any) int64 {
 
 func Api_paginator_bySchoolName(school_name interface{}, limit, page int) gorose.Paginate {
 	db := tuuz.Db().Table(Table)
-	db.Fields("name,tag_id,is_upload,is_payed,date,change_date")
+	db.Fields("name,tag_id,is_upload,is_payed,date,change_date,unix_timestamp(date) as int_time")
 	db.Where("school_name", school_name)
 	db.OrderBy("id desc")
 	db.Limit(limit)
