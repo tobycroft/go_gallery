@@ -8,6 +8,18 @@ import (
 
 const Table = "g_tag"
 
+func Api_select_avail() []gorose.Data {
+	db := tuuz.Db().Table(Table)
+	db.Where("is_avail", 1)
+	ret, err := db.Get()
+	if err != nil {
+		Log.Dbrr(err, tuuz.FUNCTION_ALL())
+		return nil
+	} else {
+		return ret
+	}
+}
+
 func Api_select() []gorose.Data {
 	db := tuuz.Db().Table(Table)
 	ret, err := db.Get()

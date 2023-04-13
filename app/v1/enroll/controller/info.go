@@ -114,10 +114,7 @@ func enroll_offline(c *gin.Context) {
 	if !ok {
 		return
 	}
-	school_name_show, ok := Input.Post("school_name_show", c, true)
-	if !ok {
-		return
-	}
+	school_name_show := school_name
 	phone, ok := Input.Post("phone", c, true)
 	if !ok {
 		return
@@ -138,6 +135,7 @@ func enroll_offline(c *gin.Context) {
 	if !ok {
 		return
 	}
+
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
 	if e.Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {

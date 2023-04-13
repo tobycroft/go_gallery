@@ -13,7 +13,7 @@ func InfoController(route *gin.RouterGroup) {
 }
 
 func tag_list(c *gin.Context) {
-	datas := TagModel.Api_select()
+	datas := TagModel.Api_select_avail()
 	RET.Success(c, 0, datas, nil)
 }
 
