@@ -79,6 +79,10 @@ func enroll_add(c *gin.Context) {
 	if !ok {
 		return
 	}
+	if len(EnrollModel.Api_find_byUidAndCert(uid, cert)) > 0 {
+		RET.Fail(c, 406, nil, "一个孩子同类型活动只能参加一次")
+		return
+	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
 	if e.Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
