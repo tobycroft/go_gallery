@@ -33,7 +33,7 @@ func Api_select(uid, is_upload, is_verify, is_payed interface{}) []gorose.Data {
 	}
 }
 
-func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) bool {
+func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) int64 {
 	db := self.Db.Table(Table)
 	data := map[string]interface{}{
 		"uid":              uid,
@@ -54,15 +54,14 @@ func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, receiver
 		"address":          address,
 	}
 	db.Data(data)
-	_, err := db.Insert()
+	ret, err := db.InsertGetId()
 	if err != nil {
 		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
-		return false
+		return 0
 	} else {
-		return true
+		return ret
 	}
 }
-
 func (self *Interface) Api_update(id, uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) bool {
 	db := self.Db.Table(Table)
 	db.Where("id", id)

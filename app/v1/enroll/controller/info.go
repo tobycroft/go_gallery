@@ -88,8 +88,8 @@ func enroll_add(c *gin.Context) {
 	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
-	if e.Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
-		RET.Success(c, 0, nil, nil)
+	if id := e.Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address); id > 0 {
+		RET.Success(c, 0, id, nil)
 	} else {
 		RET.Fail(c, 500, nil, nil)
 	}
@@ -138,8 +138,8 @@ func enroll_offline(c *gin.Context) {
 
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
-	if e.Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
-		RET.Success(c, 0, nil, nil)
+	if id := e.Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address); id > 0 {
+		RET.Success(c, 0, id, nil)
 	} else {
 		RET.Fail(c, 500, nil, nil)
 	}
