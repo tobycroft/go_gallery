@@ -41,6 +41,7 @@ func enroll_add(c *gin.Context) {
 	if !ok {
 		return
 	}
+	receiver_name := name
 	email, ok := Input.Post("email", c, true)
 	if !ok {
 		return
@@ -87,7 +88,7 @@ func enroll_add(c *gin.Context) {
 	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
-	if e.Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
+	if e.Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
 		RET.Success(c, 0, nil, nil)
 	} else {
 		RET.Fail(c, 500, nil, nil)
@@ -95,34 +96,20 @@ func enroll_add(c *gin.Context) {
 }
 func enroll_offline(c *gin.Context) {
 	uid := c.GetHeader("uid")
-	tag_id, ok := Input.PostInt64("tag_id", c)
-	if !ok {
-		return
-	}
-	age, ok := Input.PostInt64("age", c)
-	if !ok {
-		return
-	}
-	tag_group_id, ok := Input.PostInt64("tag_group_id", c)
-	if !ok {
-		return
-	}
+	tag_id := 0
+	age := 0
+	tag_group_id := 0
 	name, ok := Input.Post("name", c, true)
 	if !ok {
 		return
 	}
-	email, ok := Input.Post("email", c, true)
+	receiver_name, ok := Input.Post("receiver_name", c, true)
 	if !ok {
 		return
 	}
-	gender, ok := Input.PostInt64("gender", c)
-	if !ok {
-		return
-	}
-	cert, ok := Input.Post("cert", c, true)
-	if !ok {
-		return
-	}
+	email := ""
+	gender := 1
+	cert := ""
 	school_name, ok := Input.Post("school_name", c, true)
 	if !ok {
 		return
@@ -151,13 +138,9 @@ func enroll_offline(c *gin.Context) {
 	if !ok {
 		return
 	}
-	if len(EnrollModel.Api_find_byUidAndCert(uid, cert)) > 0 {
-		RET.Fail(c, 406, nil, "一个孩子同类型活动只能参加一次")
-		return
-	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
-	if e.Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
+	if e.Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address) {
 		RET.Success(c, 0, nil, nil)
 	} else {
 		RET.Fail(c, 500, nil, nil)
@@ -185,6 +168,7 @@ func enroll_edit(c *gin.Context) {
 	mp.PostString("city")
 	mp.PostString("district")
 	mp.PostString("address")
+	mp.PostString("receiver_name")
 	mp.PostDateTime("expect_date")
 	mp.PostBool("is_expect")
 	data, err, errmsg := mp.GetPostMap()

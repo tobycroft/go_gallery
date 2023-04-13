@@ -33,7 +33,7 @@ func Api_select(uid, is_upload, is_verify, is_payed interface{}) []gorose.Data {
 	}
 }
 
-func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) bool {
+func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) bool {
 	db := self.Db.Table(Table)
 	data := map[string]interface{}{
 		"uid":              uid,
@@ -41,6 +41,7 @@ func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, email, g
 		"age":              age,
 		"tag_group_id":     tag_group_id,
 		"name":             name,
+		"receiver_name":    receiver_name,
 		"email":            email,
 		"gender":           gender,
 		"cert":             cert,
