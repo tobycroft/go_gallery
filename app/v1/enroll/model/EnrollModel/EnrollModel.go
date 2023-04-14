@@ -195,10 +195,11 @@ func Api_find_byUid(uid, id interface{}) gorose.Data {
 	}
 }
 
-func Api_find_byUidAndCert(uid, cert interface{}) gorose.Data {
+func Api_find_byUidAndCert(uid, cert, tag_id interface{}) gorose.Data {
 	db := tuuz.Db().Table(Table)
 	db.Where("uid", uid)
 	db.Where("cert", cert)
+	db.Where("tag_id", tag_id)
 	ret, err := db.Find()
 	if err != nil {
 		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())

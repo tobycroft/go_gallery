@@ -82,7 +82,7 @@ func enroll_add(c *gin.Context) {
 	if !ok {
 		return
 	}
-	if len(EnrollModel.Api_find_byUidAndCert(uid, cert)) > 0 {
+	if len(EnrollModel.Api_find_byUidAndCert(uid, cert, tag_id)) > 0 {
 		RET.Fail(c, 406, nil, "一个孩子同类型活动只能参加一次")
 		return
 	}
