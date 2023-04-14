@@ -158,7 +158,7 @@ func enroll_edit(c *gin.Context) {
 	mp.PostString("name")
 	mp.PostString("email")
 	mp.PostInt64("gender")
-	mp.PostString("nacertme")
+	//mp.PostString("cert")
 	mp.PostString("school_name")
 	mp.PostString("school_name_show")
 	mp.PostString("phone")
