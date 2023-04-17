@@ -84,13 +84,17 @@ func enroll_add(c *gin.Context) {
 	}
 	var e EnrollModel.Interface
 	e.Db = tuuz.Db()
+	e.Db.Begin()
 	if len(e.Api_find_byUidAndCert(uid, cert, tag_id)) > 0 {
+		e.Db.Rollback()
 		RET.Fail(c, 406, nil, "一个孩子同类型活动只能参加一次")
 		return
 	}
 	if id := e.Api_insert(uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address); id > 0 {
+		e.Db.Commit()
 		RET.Success(c, 0, id, nil)
 	} else {
+		e.Db.Rollback()
 		RET.Fail(c, 500, nil, nil)
 	}
 }
