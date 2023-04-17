@@ -54,6 +54,7 @@ func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, receiver
 		"address":          address,
 	}
 	db.Data(data)
+	db.LockForUpdate()
 	ret, err := db.InsertGetId()
 	if err != nil {
 		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
@@ -186,6 +187,21 @@ func Api_find_byUid(uid, id interface{}) gorose.Data {
 	db := tuuz.Db().Table(Table)
 	db.Where("uid", uid)
 	db.Where("id", id)
+	ret, err := db.Find()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return nil
+	} else {
+		return ret
+	}
+}
+
+func (self *Interface) Api_find_byUidAndCert(uid, cert, tag_id interface{}) gorose.Data {
+	db := self.Db.Table(Table)
+	db.Where("uid", uid)
+	db.Where("cert", cert)
+	db.Where("tag_id", tag_id)
+	db.LockForUpdate()
 	ret, err := db.Find()
 	if err != nil {
 		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
