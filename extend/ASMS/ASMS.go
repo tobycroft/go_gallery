@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Unknwon/goconfig"
 	"github.com/tobycroft/AossGoSdk"
+	"main.go/tuuz/Jsong"
 )
 
 /*
@@ -50,7 +51,11 @@ func Sms_send(phone, quhao, text any) error {
 	var sms AossGoSdk.ASMS
 	sms.Name = name
 	sms.Token = token
-	return sms.Sms_send(phone, quhao, text)
+	str, err := Jsong.Encode(map[string]any{"code": text})
+	if err != nil {
+		return err
+	}
+	return sms.Sms_send(phone, quhao, str)
 }
 
 func Sms_single(phone any, quhao, text any, code int64) error {
