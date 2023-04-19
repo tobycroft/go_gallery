@@ -9,6 +9,7 @@ import (
 	"main.go/common/BaseModel/TokenModel"
 	"main.go/extend/ASMS"
 	"main.go/tuuz/Input"
+	"main.go/tuuz/Jsong"
 	"main.go/tuuz/RET"
 	"time"
 )
@@ -165,8 +166,12 @@ func auth_send(c *gin.Context) {
 	//}
 	code := Calc.Rand[int64](1000, 9999)
 
-	text := "您的验证码是:" + Calc.Any2String(code) + "，请确保是本人操作，不要把验证码泄露给其他人，5分钟内有效"
-	err := ASMS.Sms_single(phone, 86, text, code)
+	text, err := Jsong.Encode(map[string]any{"code": code})
+	if err != nil {
+		RET.Fail(c, 300, nil, err.Error())
+		return
+	}
+	err = ASMS.Sms_single(phone, 86, text, code)
 	if err != nil {
 		RET.Fail(c, 200, err.Error(), "验证码发送失败请稍后再试")
 	} else {
