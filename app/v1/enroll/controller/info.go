@@ -100,7 +100,7 @@ func enroll_add(c *gin.Context) {
 }
 func enroll_offline(c *gin.Context) {
 	uid := c.GetHeader("uid")
-	tag_id := 0
+	tag_id := 6
 	age := 0
 	tag_group_id := 0
 	name, ok := Input.Post("name", c, true)
