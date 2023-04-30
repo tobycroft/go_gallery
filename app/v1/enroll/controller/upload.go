@@ -93,7 +93,7 @@ func upload_edit(c *gin.Context) {
 	if !ok {
 		return
 	}
-	attachment, ok := Input.Post("attachment", c, true)
+	attachment, ok := Input.PostLength("attachment", 10, 256, c, true)
 	if !ok {
 		return
 	}
