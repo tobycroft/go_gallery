@@ -16,6 +16,7 @@ func AuthController(route *gin.RouterGroup) {
 	route.Any("register", auth_register)
 	route.Any("login", auth_login)
 	route.Any("send", auth_send)
+	route.Any("code", auth_code)
 
 	route.Any("phone", auth_phone)
 
@@ -89,7 +90,7 @@ func auth_phone(c *gin.Context) {
 	if !ok {
 		return
 	}
-	code, ok := Input.PostInt64("code", c)
+	code, ok := Input.PostLength("code", 4, 8, c, false)
 	if !ok {
 		return
 	}
@@ -98,12 +99,13 @@ func auth_phone(c *gin.Context) {
 		"phone": phone,
 		"code":  code,
 	}, nil, nil)
-	err = RetAction.App_ret(ret, err, l)
+	err = RetAction.App_ret(ret, err, &l)
 	if err != nil {
 		RET.Fail(c, 200, nil, err.Error())
 		return
 	}
-	RET.Success(c, 0, l, nil)
+	uid :=
+		RET.Success(c, 0, l.Data, nil)
 }
 
 func auth_send(c *gin.Context) {
