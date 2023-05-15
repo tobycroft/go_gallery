@@ -2,6 +2,7 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
+	"main.go/route/ps"
 	v1 "main.go/route/v1"
 )
 
@@ -43,6 +44,13 @@ func OnRoute(router *gin.Engine) {
 		facility := version1.Group("facility")
 		{
 			v1.FacilityRouter(facility)
+		}
+	}
+	ps1 := router.Group("/ps")
+	{
+		user := ps1.Group("user")
+		{
+			ps.UserRouter(user)
 		}
 	}
 }
