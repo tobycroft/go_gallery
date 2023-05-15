@@ -73,14 +73,29 @@ func auth_login(c *gin.Context) {
 	RET.Success(c, 0, ret, nil)
 }
 
+type login_ret struct {
+	Code int `json:"code"`
+	Data struct {
+		Uid   int    `json:"uid"`
+		Token string `json:"token"`
+		Admin int    `json:"admin"`
+	} `json:"data"`
+	Echo string `json:"echo"`
+}
+
 func auth_phone(c *gin.Context) {
 	phone, ok := Input.PostLength("phone", 11, 11, c, false)
+	if !ok {
+		return
+	}
+	code, ok := Input.PostInt64("code", c)
 	if !ok {
 		return
 	}
 
 	ret, err := Net.Post("http://api.ps.familyeducation.org.cn/v1/user/auth/phone", nil, map[string]any{
 		"phone": phone,
+		"code":  code,
 	}, nil, nil)
 	if err != nil {
 		RET.Fail(c, 200, nil, err.Error())
