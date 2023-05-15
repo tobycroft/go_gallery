@@ -10,7 +10,7 @@ type ret struct {
 	Echo string `json:"echo"`
 }
 
-func App_ret(body string, err error, Struct *any) error {
+func App_ret(body string, err error, Struct any) error {
 	if err != nil {
 		return err
 	}
@@ -22,5 +22,8 @@ func App_ret(body string, err error, Struct *any) error {
 	if r.Code != 0 {
 		return errors.New(r.Echo)
 	}
-	return jsoniter.UnmarshalFromString(body, Struct)
+	if Struct != nil {
+		return jsoniter.UnmarshalFromString(body, &Struct)
+	}
+	return nil
 }

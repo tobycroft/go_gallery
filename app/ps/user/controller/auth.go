@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/tobycroft/Calc"
+	"main.go/app/ps/user/action/RetAction"
 	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseModel/TokenModel"
 	"main.go/tuuz/Input"
@@ -92,16 +93,17 @@ func auth_phone(c *gin.Context) {
 	if !ok {
 		return
 	}
-
+	var l login_ret
 	ret, err := Net.Post("http://api.ps.familyeducation.org.cn/v1/user/auth/phone", nil, map[string]any{
 		"phone": phone,
 		"code":  code,
 	}, nil, nil)
+	err = RetAction.App_ret(ret, err, l)
 	if err != nil {
 		RET.Fail(c, 200, nil, err.Error())
 		return
 	}
-	RET.Success(c, 0, ret, nil)
+	RET.Success(c, 0, l, nil)
 }
 
 func auth_send(c *gin.Context) {
@@ -112,11 +114,12 @@ func auth_send(c *gin.Context) {
 	ret, err := Net.Post("http://api.ps.familyeducation.org.cn/v1/user/auth/send", nil, map[string]any{
 		"phone": phone,
 	}, nil, nil)
+	err = RetAction.App_ret(ret, err, nil)
 	if err != nil {
 		RET.Fail(c, 200, nil, err.Error())
 		return
 	}
-	RET.Success(c, 0, ret, nil)
+	RET.Success(c, 0, nil, nil)
 }
 
 func auth_code(c *gin.Context) {
