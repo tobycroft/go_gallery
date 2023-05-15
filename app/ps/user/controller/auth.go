@@ -9,7 +9,7 @@ import (
 	"main.go/common/BaseModel/TokenModel"
 	"main.go/extend/ASMS"
 	"main.go/tuuz/Input"
-	"main.go/tuuz/Jsong"
+	"main.go/tuuz/Net"
 	"main.go/tuuz/RET"
 	"time"
 )
@@ -68,21 +68,15 @@ func auth_login(c *gin.Context) {
 	if !ok {
 		return
 	}
-	data := UserModel.Api_find_byPhoneandPassword(phone, Calc.Md5(password))
-	if len(data) > 0 {
-		token := Calc.GenerateToken()
-		if !TokenModel.Api_insert(data["id"], token, "h5") {
-			RET.Fail(c, 500, nil, "tokenfail")
-			return
-		}
-		RET.Success(c, 0, map[string]interface{}{
-			"uid":   data["id"],
-			"token": token,
-			"admin": data["admin"],
-		}, nil)
-	} else {
-		RET.Fail(c, 401, nil, nil)
+	ret, err := Net.Post("http://api.ps.familyeducation.org.cn/v1/user/auth/code", nil, map[string]any{
+		"phone":    phone,
+		"password": password,
+	}, nil, nil)
+	if err != nil {
+		RET.Fail(c, 200, nil, err.Error())
+		return
 	}
+	RET.Success(c, 0, ret, nil)
 }
 
 func auth_phone(c *gin.Context) {
@@ -160,23 +154,14 @@ func auth_send(c *gin.Context) {
 	if !ok {
 		return
 	}
-	//if len(UserModel.Api_find_byPhone(phone)) > 0 {
-	//	RET.Fail(c, 402, nil, "号码已被注册，请更换其他号码")
-	//	return
-	//}
-	code := Calc.Rand[int64](1000, 9999)
-
-	text, err := Jsong.Encode(map[string]any{"code": code})
+	ret, err := Net.Post("http://api.ps.familyeducation.org.cn/v1/user/auth/send", nil, map[string]any{
+		"phone": phone,
+	}, nil, nil)
 	if err != nil {
-		RET.Fail(c, 300, nil, err.Error())
+		RET.Fail(c, 200, nil, err.Error())
 		return
 	}
-	err = ASMS.Sms_single(phone, 86, text, code)
-	if err != nil {
-		RET.Fail(c, 200, err.Error(), "验证码发送失败请稍后再试")
-	} else {
-		RET.Success(c, 0, nil, nil)
-	}
+	RET.Success(c, 0, ret, nil)
 }
 
 func auth_code(c *gin.Context) {
