@@ -2,7 +2,7 @@ package ps
 
 import (
 	"github.com/gin-gonic/gin"
-	"main.go/app/v1/user/controller"
+	"main.go/app/ps/user/controller"
 )
 
 func UserRouter(route *gin.RouterGroup) {
