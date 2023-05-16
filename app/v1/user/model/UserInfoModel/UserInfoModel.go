@@ -71,21 +71,6 @@ func Api_find_byUid(uid interface{}) gorose.Data {
 	}
 }
 
-func Api_find_byPhone(phone interface{}) gorose.Data {
-	db := tuuz.Db().Table(Table)
-	where := map[string]interface{}{
-		"phone": phone,
-	}
-	db.Where(where)
-	ret, err := db.Find()
-	if err != nil {
-		Log.Dbrr(err, tuuz.FUNCTION_ALL())
-		return nil
-	} else {
-		return ret
-	}
-}
-
 func Api_find_byCoupleName(couple_name interface{}) gorose.Data {
 	db := tuuz.Db().Table(Table)
 	where := map[string]interface{}{

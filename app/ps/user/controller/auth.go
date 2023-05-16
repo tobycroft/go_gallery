@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tobycroft/Calc"
 	"main.go/app/ps/user/action/RetAction"
-	"main.go/app/v1/user/model/UserInfoModel"
 	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseModel/TokenModel"
 	"main.go/tuuz/Input"
@@ -135,7 +134,7 @@ func auth_phone(c *gin.Context) {
 		RET.Fail(c, 200, nil, err.Error())
 		return
 	}
-	ui := UserInfoModel.Api_find_byPhone(u.Data.Phone)
+	ui := UserModel.Api_find_byPhone(u.Data.Phone)
 	token := Calc.GenerateToken()
 	if len(ui) > 0 {
 		if !TokenModel.Api_insert(ui["id"], token, "h5") {
