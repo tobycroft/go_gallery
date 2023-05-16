@@ -4,11 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tobycroft/Calc"
 	"main.go/app/ps/user/action/RetAction"
+	"main.go/app/v1/user/model/UserInfoModel"
 	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseModel/TokenModel"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/Net"
 	"main.go/tuuz/RET"
+	"time"
 )
 
 func AuthController(route *gin.RouterGroup) {
@@ -84,6 +86,25 @@ type login_ret struct {
 	} `json:"data"`
 	Echo string `json:"echo"`
 }
+type userinfo struct {
+	Data struct {
+		WxId       string      `json:"wx_id"`
+		WxUnion    interface{} `json:"wx_union"`
+		WxName     string      `json:"wx_name"`
+		Active     int         `json:"active"`
+		ChangeDate time.Time   `json:"change_date"`
+		Date       time.Time   `json:"date"`
+		Admin      int         `json:"admin"`
+		WxSwitch   int         `json:"wx_switch"`
+		Id         int         `json:"id"`
+		Username   string      `json:"username"`
+		Phone      string      `json:"phone"`
+		WxImg      string      `json:"wx_img"`
+		Share      interface{} `json:"share"`
+	} `json:"data"`
+	Echo string `json:"echo"`
+	Code int    `json:"code"`
+}
 
 func auth_phone(c *gin.Context) {
 	phone, ok := Input.PostLength("phone", 11, 11, c, false)
@@ -104,8 +125,42 @@ func auth_phone(c *gin.Context) {
 		RET.Fail(c, 200, nil, err.Error())
 		return
 	}
-	uid :=
-		RET.Success(c, 0, l.Data, nil)
+	var u userinfo
+	ret, err = Net.Post("http://api.ps.familyeducation.org.cn/v1/user/info/my", nil, nil, map[string]string{
+		"uid":   Calc.Any2String(l.Data.Uid),
+		"token": Calc.Any2String(l.Data.Token),
+	}, nil)
+	err = RetAction.App_ret(ret, err, &u)
+	if err != nil {
+		RET.Fail(c, 200, nil, err.Error())
+		return
+	}
+	ui := UserInfoModel.Api_find_byPhone(u.Data.Phone)
+	token := Calc.GenerateToken()
+	if len(ui) > 0 {
+		if !TokenModel.Api_insert(ui["id"], token, "h5") {
+			RET.Fail(c, 500, nil, "tokenfail")
+			return
+		}
+		RET.Success(c, 0, map[string]interface{}{
+			"uid":   ui["id"],
+			"token": token,
+		}, nil)
+	} else {
+		if id := UserModel.Api_insert(u.Data.Username, phone, Calc.Md5(l.Data.Token)); id > 0 {
+			if !TokenModel.Api_insert(id, token, "h5") {
+				RET.Fail(c, 500, nil, "tokenfail")
+				return
+			}
+			RET.Success(c, 0, map[string]interface{}{
+				"uid":   id,
+				"token": token,
+			}, nil)
+		} else {
+			RET.Fail(c, 404, nil, nil)
+		}
+	}
+	RET.Success(c, 0, u.Data, nil)
 }
 
 func auth_send(c *gin.Context) {
