@@ -179,14 +179,15 @@ func enroll_edit(c *gin.Context) {
 		return
 	}
 	enroll_data := EnrollModel.Api_find(id)
-	if mp.Has("expect_date") {
-		if mp.Find("expect_date").(time.Time).Before(time.Now().AddDate(0, 0, 3)) {
-			RET.Fail(c, 406, nil, "时间需要预约三天以后")
-			return
-		}
-	}
+
 	if mp.Has("is_expect") {
 		if mp.Find("is_expect").(bool) {
+			if mp.Has("expect_date") {
+				if mp.Find("expect_date").(time.Time).Before(time.Now().AddDate(0, 0, 3)) {
+					RET.Fail(c, 406, nil, "时间需要预约三天以后")
+					return
+				}
+			}
 			if enroll_data["is_payed"].(int64) != 1 {
 				RET.Fail(c, 403, nil, "请先完成支付再预约")
 				return
