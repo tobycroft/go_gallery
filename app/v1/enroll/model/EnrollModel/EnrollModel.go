@@ -63,6 +63,39 @@ func (self *Interface) Api_insert(uid, tag_id, age, tag_group_id, name, receiver
 		return ret
 	}
 }
+
+func (self *Interface) Api_insert_ps(source, uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) int64 {
+	db := self.Db.Table(Table)
+	data := map[string]interface{}{
+		"source":           source,
+		"uid":              uid,
+		"tag_id":           tag_id,
+		"age":              age,
+		"tag_group_id":     tag_group_id,
+		"name":             name,
+		"receiver_name":    receiver_name,
+		"email":            email,
+		"gender":           gender,
+		"cert":             cert,
+		"school_name":      school_name,
+		"school_name_show": school_name_show,
+		"phone":            phone,
+		"province":         province,
+		"city":             city,
+		"district":         district,
+		"address":          address,
+	}
+	db.Data(data)
+	db.LockForUpdate()
+	ret, err := db.InsertGetId()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return 0
+	} else {
+		return ret
+	}
+}
+
 func (self *Interface) Api_update(id, uid, tag_id, age, tag_group_id, name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address interface{}) bool {
 	db := self.Db.Table(Table)
 	db.Where("id", id)
