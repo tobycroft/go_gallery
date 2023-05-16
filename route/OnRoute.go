@@ -52,5 +52,9 @@ func OnRoute(router *gin.Engine) {
 		{
 			ps.UserRouter(user)
 		}
+		enroll := ps1.Group("enroll")
+		{
+			ps.EnrollRouter(enroll)
+		}
 	}
 }
