@@ -83,7 +83,7 @@ func enroll_add(c *gin.Context) {
 		RET.Fail(c, 406, nil, "一个孩子同类型活动只能参加一次")
 		return
 	}
-	if id := e.Api_insert_ps("ps", uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address); id > 0 {
+	if id := e.Api_insert_ps("free", uid, tag_id, age, tag_group_id, name, receiver_name, email, gender, cert, school_name, school_name_show, phone, province, city, district, address); id > 0 {
 		e.Db.Commit()
 		RET.Success(c, 0, id, nil)
 	} else {
