@@ -160,7 +160,6 @@ func auth_phone(c *gin.Context) {
 			RET.Fail(c, 404, nil, nil)
 		}
 	}
-	RET.Success(c, 0, u.Data, nil)
 }
 
 func auth_send(c *gin.Context) {
