@@ -14,12 +14,6 @@ func InfoController(route *gin.RouterGroup) {
 	route.Use(BaseController.LoginedController(), gin.Recovery())
 
 	route.Any("add", enroll_add)
-	//线下参加
-	route.Any("offline", enroll_offline)
-	route.Any("edit", enroll_edit)
-	route.Any("list", enroll_list)
-	route.Any("get", enroll_get)
-
 }
 
 func enroll_add(c *gin.Context) {
