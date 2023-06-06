@@ -50,7 +50,7 @@ func enroll_add(c *gin.Context) {
 	if !ok {
 		return
 	}
-	cert, ok := Input.Post("cert", c, true)
+	cert, ok := Input.PostLength("cert", 5, 19, c, true)
 	if !ok {
 		return
 	}
