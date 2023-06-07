@@ -23,7 +23,6 @@ func WechatController(route *gin.RouterGroup) {
 	route.Any("phone", wechat_phone)
 	route.Any("scene", wechat_scene)
 	route.Any("create", wechat_create)
-	c
 	route.Any("create_file", wechat_create_file)
 	route.Any("scheme", wechat_scheme)
 	route.Any("redirect", wechat_redirect)
