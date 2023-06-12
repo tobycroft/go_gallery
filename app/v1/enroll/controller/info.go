@@ -221,6 +221,7 @@ func enroll_get(c *gin.Context) {
 	}
 	data := EnrollModel.Api_find_byUid(uid, id)
 	if len(data) > 0 {
+		data["tag_info"] = TagModel.Api_find(data["tag_id"])
 		RET.Success(c, 0, data, nil)
 	} else {
 		RET.Fail(c, 404, nil, nil)
