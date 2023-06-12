@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"main.go/app/v1/enroll/model/EnrollModel"
+	"main.go/app/v1/tag/model/TagModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz"
 	"main.go/tuuz/Input"
@@ -206,6 +207,9 @@ func enroll_edit(c *gin.Context) {
 func enroll_list(c *gin.Context) {
 	uid := c.GetHeader("uid")
 	datas := EnrollModel.Api_select(uid, nil, nil, nil)
+	for _, data := range datas {
+		data["tag_info"] = TagModel.Api_find(data["tag_id"])
+	}
 	RET.Success(c, 0, datas, nil)
 }
 
