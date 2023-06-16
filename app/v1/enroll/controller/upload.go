@@ -5,7 +5,7 @@ import (
 	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/app/v1/enroll/model/EnrollUploadModel"
 	"main.go/app/v1/enroll/model/EnrolllikeModel"
-	"main.go/app/v1/tag/model/TagModel"
+	"main.go/app/v1/tag/model/TagGroupModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz"
 	"main.go/tuuz/Input"
@@ -148,7 +148,7 @@ func upload_get(c *gin.Context) {
 	}
 	data := EnrollUploadModel.Api_joinEnroll_find_byEnrollId(enroll_id)
 	if len(data) > 0 {
-		data["tag_info"] = TagModel.Api_find(data["tag_id"])
+		data["tag_group_info"] = TagGroupModel.Api_find(data["tag_group_id"])
 		data["like"] = EnrolllikeModel.Api_count_byEnrollId(data["enroll_id"])
 		RET.Success(c, 0, data, nil)
 	} else {
