@@ -149,6 +149,7 @@ func upload_get(c *gin.Context) {
 	data := EnrollUploadModel.Api_joinEnroll_find_byEnrollId(enroll_id)
 	if len(data) > 0 {
 		data["tag_info"] = TagModel.Api_find(data["tag_id"])
+		data["like"] = EnrolllikeModel.Api_count_byEnrollId(data["enroll_id"])
 		RET.Success(c, 0, data, nil)
 	} else {
 		RET.Fail(c, 404, nil, nil)
