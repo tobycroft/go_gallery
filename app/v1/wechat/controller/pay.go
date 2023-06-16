@@ -17,6 +17,7 @@ import (
 	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/app/v1/tag/model/TagModel"
 	"main.go/app/v1/user/model/UserModel"
+	"main.go/app/v1/wechat/model/WechatOrderModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz/Input"
 	"main.go/tuuz/RET"
@@ -124,13 +125,17 @@ func pay_order(c *gin.Context) {
 		RET.Fail(c, 500, nil, nil)
 		return
 	}
+
 	tag_data := TagModel.Api_find(enroll_data["tag_id"])
 	if len(tag_data) < 1 {
 		RET.Fail(c, 404, nil, "未找到对应的标签")
 		return
 	}
-
 	price := Calc.ToDecimal(tag_data["price"])
+	if !WechatOrderModel.Api_insert(orderid, enroll_id, price) {
+		RET.Fail(c, 500, nil, nil)
+		return
+	}
 	//if err != nil {
 	//	RET.Fail(c, 408, nil, "价格数据错误")
 	//	return
