@@ -5,6 +5,7 @@ import (
 	"main.go/app/v1/enroll/model/EnrollModel"
 	"main.go/app/v1/enroll/model/EnrollUploadModel"
 	"main.go/app/v1/enroll/model/EnrolllikeModel"
+	"main.go/app/v1/tag/model/TagModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz"
 	"main.go/tuuz/Input"
@@ -133,9 +134,9 @@ func upload_list(c *gin.Context) {
 		return
 	}
 	datas := EnrollUploadModel.Api_joinEnroll_paginator_byTagId(tag_id, search, limit, page)
-	for i, datum := range datas.Data {
+	for _, datum := range datas.Data {
 		datum["like"] = EnrolllikeModel.Api_count_byEnrollId(datum["enroll_id"])
-		datas.Data[i] = datum
+		//datum["tag_info"] = TagModel.Api_find(datum["tag_id"])
 	}
 	RET.Success(c, 0, datas, nil)
 }
@@ -147,6 +148,7 @@ func upload_get(c *gin.Context) {
 	}
 	data := EnrollUploadModel.Api_joinEnroll_find_byEnrollId(enroll_id)
 	if len(data) > 0 {
+		data["tag_info"] = TagModel.Api_find(data["tag_id"])
 		RET.Success(c, 0, data, nil)
 	} else {
 		RET.Fail(c, 404, nil, nil)
