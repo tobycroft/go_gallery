@@ -1,6 +1,7 @@
 package WechatOrderModel
 
 import (
+	"github.com/tobycroft/gorose-pro"
 	"main.go/tuuz"
 	"main.go/tuuz/Log"
 )
@@ -37,5 +38,17 @@ func Api_update_status(order_id, status any) bool {
 		return false
 	} else {
 		return true
+	}
+}
+
+func Api_find_orderId(order_id any) gorose.Data {
+	db := tuuz.Db().Table(Table)
+	db.Where("order_id", order_id)
+	ret, err := db.Find()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return nil
+	} else {
+		return ret
 	}
 }

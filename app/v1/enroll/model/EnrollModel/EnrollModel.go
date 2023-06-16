@@ -188,6 +188,22 @@ func (self *Interface) Api_update_isPayed(order_id, is_payed interface{}) bool {
 	}
 }
 
+func (self *Interface) Api_update_isPayed_byId(id, is_payed interface{}) bool {
+	db := self.Db.Table(Table)
+	db.Where("id", id)
+	data := map[string]any{
+		"is_payed": is_payed,
+	}
+	db.Data(data)
+	_, err := db.Update()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return false
+	} else {
+		return true
+	}
+}
+
 func Api_update_orderId(id, order_id interface{}) bool {
 	db := tuuz.Db().Table(Table)
 	db.Where("id", id)
