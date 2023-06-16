@@ -195,6 +195,7 @@ func Api_update_orderId(id, order_id interface{}) bool {
 		"order_id": order_id,
 	}
 	db.Data(data)
+	db.LockForUpdate()
 	_, err := db.Update()
 	if err != nil {
 		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())

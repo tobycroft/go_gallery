@@ -66,7 +66,7 @@ func api_notify(c *gin.Context) {
 	} else if *transaction.TradeState == "USERPAYING" {
 
 	} else if *transaction.TradeState == "PAYERROR" {
-
+		EnrollModel.Api_update_orderId(data["id"], "")
 	}
 	c.JSON(200, map[string]any{
 		"code":    "SUCCESS",
