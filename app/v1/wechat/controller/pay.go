@@ -133,7 +133,7 @@ func pay_order(c *gin.Context) {
 	}
 	price := Calc.ToDecimal(tag_data["price"])
 	if !WechatOrderModel.Api_insert(orderid, enroll_id, price) {
-		RET.Fail(c, 500, nil, nil)
+		RET.Fail(c, 500, nil, "微信订单插入失败")
 		return
 	}
 	//if err != nil {
