@@ -61,20 +61,24 @@ func api_notify(c *gin.Context) {
 		//enroll.Api_update_isPayed(order_id, 1)
 		enroll.Api_update_isPayed_byId(data["id"], 1)
 		EnrollModel.Api_update_orderId(data["id"], order_id)
+		WechatOrderModel.Api_update_status(order_id, -1, *transaction.TradeState)
 	} else if *transaction.TradeState == "NOTPAY" {
 		EnrollModel.Api_update_orderId(data["id"], "")
+		WechatOrderModel.Api_update_status(order_id, -1, *transaction.TradeState)
 	} else if *transaction.TradeState == "CLOSED" {
 		var enroll EnrollModel.Interface
 		enroll.Db = tuuz.Db()
 		enroll.Api_update_isPayed(order_id, -1)
 		EnrollModel.Api_update_orderId(data["id"], "")
+		WechatOrderModel.Api_update_status(order_id, -1, *transaction.TradeState)
 	} else if *transaction.TradeState == "REVOKED" {
+		WechatOrderModel.Api_update_status(order_id, -1, *transaction.TradeState)
 		EnrollModel.Api_update_orderId(data["id"], "")
 	} else if *transaction.TradeState == "USERPAYING" {
-
+		WechatOrderModel.Api_update_status(order_id, -1, *transaction.TradeState)
 	} else if *transaction.TradeState == "PAYERROR" {
 		EnrollModel.Api_update_orderId(data["id"], "")
-		WechatOrderModel.Api_update_status(order_id, -1)
+		WechatOrderModel.Api_update_status(order_id, -1, *transaction.TradeState)
 	}
 	c.JSON(200, map[string]any{
 		"code":    "SUCCESS",

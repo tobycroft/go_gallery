@@ -25,11 +25,12 @@ func Api_insert(order_id, relative_id, amount any) bool {
 	}
 }
 
-func Api_update_status(order_id, status any) bool {
+func Api_update_status(order_id, status, status_msg any) bool {
 	db := tuuz.Db().Table(Table)
 	db.Where("order_id", order_id)
 	data := map[string]any{
-		"status": status,
+		"status":     status,
+		"status_msg": status_msg,
 	}
 	db.Data(data)
 	_, err := db.Update()
