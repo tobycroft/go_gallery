@@ -261,6 +261,21 @@ func (self *Interface) Api_find_byUidAndCert(uid, cert, tag_id interface{}) goro
 	}
 }
 
+func (self *Interface) Api_find_byNameAndCertAndIsPayed(name, cert, is_payed interface{}) gorose.Data {
+	db := self.Db.Table(Table)
+	db.Where("cert", cert)
+	db.Where("name", name)
+	db.Where("is_payed", is_payed)
+	db.LockForUpdate()
+	ret, err := db.Find()
+	if err != nil {
+		Log.DBrrsql(err, db, tuuz.FUNCTION_ALL())
+		return nil
+	} else {
+		return ret
+	}
+}
+
 func Api_find_byUidAndCert(uid, cert, tag_id interface{}) gorose.Data {
 	db := tuuz.Db().Table(Table)
 	db.Where("uid", uid)
