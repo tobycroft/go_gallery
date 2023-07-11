@@ -112,9 +112,9 @@ func enroll_offline(c *gin.Context) {
 	if !ok {
 		return
 	}
-	email := ""
-	gender := 1
-	cert := ""
+	email := Input.SPostDefault("email", c, "")
+	gender := Input.SPostDefault("gender", c, int64(1))
+	cert := Input.SPostDefault("cert", c, "")
 	school_name, ok := Input.Post("school_name", c, true)
 	if !ok {
 		return
