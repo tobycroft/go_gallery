@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"main.go/app/v1/enroll/model/EnrollModel"
+	"main.go/app/v1/enroll/model/EnrollUploadModel"
 	"main.go/app/v1/tag/model/TagModel"
 	"main.go/common/BaseController"
 	"main.go/tuuz"
@@ -214,6 +215,12 @@ func enroll_list(c *gin.Context) {
 	datas := EnrollModel.Api_select(uid, nil, nil, nil)
 	for _, data := range datas {
 		data["tag_info"] = TagModel.Api_find(data["tag_id"])
+		upd := EnrollUploadModel.Api_find(uid, data["id"])
+		if len(upd) > 0 {
+			if upd["rating"] == "淘汰" {
+				data["is_payed"] = -1
+			}
+		}
 	}
 	RET.Success(c, 0, datas, nil)
 }
