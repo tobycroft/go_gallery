@@ -3,6 +3,7 @@ package Input
 import (
 	"crypto/sha256"
 	"errors"
+	"github.com/feiin/go-xss"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/shopspring/decimal"
@@ -16,6 +17,7 @@ import (
 	"main.go/tuuz/RET"
 	"main.go/tuuz/Vali"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -152,13 +154,20 @@ func SPostDefault[T string | int | int32 | int64 | float32 | float64 | decimal.D
 	}
 }
 
-func SPostString(key string, c *gin.Context, xss bool) (string, bool) {
+func SPostString(key string, c *gin.Context, need_xss bool) (string, bool) {
 	in, ok := c.GetPostForm(key)
 	if !ok {
 		return "", false
 	} else {
-		if xss {
-			return template.JSEscapeString(in), true
+		if need_xss {
+			str, err := strconv.Unquote("\"" + in + "\"")
+			if err != nil {
+				c.JSON(RET.Ret_fail(400, key, "POST-["+key+"]-Error:"+err.Error()))
+				c.Abort()
+				return "", false
+			}
+			out := xss.FilterXSS(str, xss.NewDefaultXssOption())
+			return out, true
 		} else {
 			return in, true
 		}
