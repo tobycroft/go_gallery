@@ -2,7 +2,6 @@ package Redis
 
 import (
 	"errors"
-	"github.com/tobycroft/gorose-pro"
 	"main.go/config/app_conf"
 	"main.go/tuuz"
 	"main.go/tuuz/Log"
@@ -12,7 +11,7 @@ func Hash_add(key string, field, value any) error {
 	return goredis.HSet(goredis_ctx, app_conf.Project+":"+key, field, value).Err()
 }
 
-func Hash_add_more[T map[string]string | map[string]any | gorose.Data](key string, maps T) error {
+func Hash_add_more[T map[string]string | map[string]any](key string, maps T) error {
 	return goredis.HSet(goredis_ctx, app_conf.Project+":"+key, maps).Err()
 }
 
@@ -59,14 +58,7 @@ func Hash_count(key string) int64 {
 }
 
 func Hash_all(key string) (map[string]string, error) {
-	data, err := goredis.HGetAll(goredis_ctx, app_conf.Project+":"+key).Result()
-	if err != nil {
-		return nil, err
-	}
-	if len(data) < 1 {
-		return nil, errors.New("empty")
-	}
-	return data, err
+	return goredis.HGetAll(goredis_ctx, app_conf.Project+":"+key).Result()
 }
 
 func Hash_delete(key string, field string) error {
