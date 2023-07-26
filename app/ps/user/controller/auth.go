@@ -6,7 +6,9 @@ import (
 	"main.go/app/ps/user/action/RetAction"
 	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseModel/TokenModel"
+	"main.go/extend/ASMS"
 	"main.go/tuuz/Input"
+	"main.go/tuuz/Jsong"
 	"main.go/tuuz/Net"
 	"main.go/tuuz/RET"
 	"time"
@@ -166,15 +168,21 @@ func auth_send(c *gin.Context) {
 	if !ok {
 		return
 	}
-	ret, err := Net.Post("http://api.ps.familyeducation.org.cn/v1/user/auth/send", nil, map[string]any{
-		"phone": phone,
-	}, nil, nil)
-	err = RetAction.App_ret(ret, err, nil)
-	if err != nil {
-		RET.Fail(c, 200, nil, err.Error())
-		return
+	//if len(UserModel.Api_find_byPhone(phone)) > 0 {
+	//	RET.Fail(c, 402, nil, "号码已被注册，请更换其他号码")
+	//	return
+	//}
+	code := Calc.Rand[int64](1000, 9999)
+	json := map[string]interface{}{
+		"code": code,
 	}
-	RET.Success(c, 0, nil, nil)
+	text, _ := Jsong.Encode(json)
+	err := ASMS.Sms_single(phone, 86, text, c.ClientIP(), code)
+	if err != nil {
+		RET.Fail(c, 200, err.Error(), "验证码发送失败请稍后再试:"+err.Error())
+	} else {
+		RET.Success(c, 0, nil, nil)
+	}
 }
 
 func auth_code(c *gin.Context) {
