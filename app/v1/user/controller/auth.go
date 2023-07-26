@@ -171,7 +171,7 @@ func auth_send(c *gin.Context) {
 		RET.Fail(c, 300, nil, err.Error())
 		return
 	}
-	err = ASMS.Sms_single(phone, 86, text, code)
+	err = ASMS.Sms_single(phone, 86, text, c.ClientIP(), code)
 	if err != nil {
 		RET.Fail(c, 200, err.Error(), "验证码发送失败请稍后再试")
 	} else {
