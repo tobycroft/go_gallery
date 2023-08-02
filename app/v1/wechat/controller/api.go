@@ -61,7 +61,7 @@ func api_notify(c *gin.Context) {
 		//enroll.Api_update_isPayed(order_id, 1)
 		enroll.Api_update_isPayed_byId(data["id"], 1)
 		EnrollModel.Api_update_orderId(data["id"], order_id)
-		WechatOrderModel.Api_update_status(order_id, *transaction.TransactionId, -1, *transaction.TradeState)
+		WechatOrderModel.Api_update_status(order_id, *transaction.TransactionId, true, *transaction.TradeState)
 	} else if *transaction.TradeState == "NOTPAY" {
 		EnrollModel.Api_update_orderId(data["id"], "")
 		WechatOrderModel.Api_update_status(order_id, *transaction.TransactionId, -1, *transaction.TradeState)
