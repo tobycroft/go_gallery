@@ -101,6 +101,8 @@ func pay_index(c *gin.Context) {
 var client *core.Client
 
 func pay_order(c *gin.Context) {
+	RET.Fail(c, 403, nil, "报名收费已截止")
+	return
 	uid := c.GetHeader("uid")
 	user := UserModel.Api_find(uid)
 	if len(user) < 1 {
